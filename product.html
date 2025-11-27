@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Loja Fantasia Eterna</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- MUDANÇA: Importação da fonte Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Ícones Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+
+<body>
+<!-- CABEÇALHO FIXO -->
+<header id="main-header">
+    <div class="header-content">
+        <!-- MUDANÇA: Título do site alterado -->
+        <a href="index.html" class="logo">Catálogo - Fantasia Eterna</a>
+        <div class="header-icons">
+            <!-- MUDANÇA: Adição do botão de Dúvida -->
+            <a href="#" id="help-button" title="Como funciona?"><i class="fas fa-question-circle"></i></a>
+            <a href="cart.html" title="Ver Carrinho"><i class="fas fa-shopping-cart"></i></a>
+            <a href="profile.html" title="Minha Conta"><i class="fas fa-user"></i></a>
+        </div>
+    </div>
+</header>
+
+
+    <div id="product-details-container">
+        <!-- O conteúdo será carregado aqui pelo JavaScript -->
+    </div>
+
+<script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/products.js"></script>
+    <script type="module" src="js/cart.js"></script>
+    
+    <!-- MUDANÇA CRUCIAL: Importa as funções necessárias e as anexa ao objeto global 'window' -->
+    <script type="module">
+        import { loadProductDetails, addToCart, toggleFavorite } from './js/products.js';
+        
+        // Torna as funções disponíveis globalmente para os eventos 'onclick'
+        window.loadProductDetails = loadProductDetails;
+        window.addToCart = addToCart;
+        window.toggleFavorite = toggleFavorite;
+        
+        // Chama a função de carregamento
+        const productId = new URLSearchParams(window.location.search).get('id');
+        if (productId) {
+            loadProductDetails(productId);
+        }
+        
+        // Função auxiliar para trocar a imagem principal (também precisa ser global)
+        window.changeMainImage = (imgUrl) => {
+            document.getElementById('main-product-image').src = imgUrl;
+            document.querySelectorAll('.thumbnails-details img').forEach(img => img.classList.remove('active-thumb'));
+            document.querySelector(`.thumbnails-details img[src="${imgUrl}"]`).classList.add('active-thumb');
+        };
+    </script>
+
+    <!-- POP-UP DE BOAS-VINDAS -->
+<div id="welcome-popup" class="popup-overlay">
+    <div class="popup-content">
+        <button id="close-popup-btn" class="popup-close-btn">&times;</button>
+        <h2>Como funciona?</h2>
+        <p>Através do nosso catálogo, você pode ver os detalhes das nossas peças, fazer consulta de estoque e preço, e simular uma compra. Mas tenha atenção: <strong>todo o processo de compra é feito no direct do nosso instagram.</strong></p>
+        <p>Caso queira concluir a compra simulada que você fez por aqui, na página de finalização você será redirecionado para nossa DM, com uma mensagem personalizada do seu pedido!</p>
+        
+        <h3>Informações de Pagamento:</h3>
+        <p>Aceitamos pagamento via pix, ou transferência bancária. Todos os detalhes do pagamento são tratados via DM do Instagram.</p>
+
+        <h3>Informações sobre Entrega e Retirada:</h3>
+        <p>Enviamos apenas para Belo Horizonte e região metropolitana. O frete de entrega é calculado após a confirmação do pedido e envio do endereço. Para outras localidades, enviamos sob solicitação, com todos os custos por conta do cliente. Retiradas podem ser feitas no Centro ou no bairro Floresta, com horário combinado previamente.</p>
+
+        <h3>Regra de Encomendas:</h3>
+        <p>Para encomendas, é necessário o pagamento de 50% do valor total para que a produção seja iniciada. O restante do pagamento será combinado no momento da entrega.</p>
+
+        <p style="margin-top: 30px;"><strong>Em caso de dúvidas, não deixe de entrar em contato conosco!</strong></p>
+    </div>
+</div>
+
+<!-- Script para controlar o Pop-up -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const popup = document.getElementById("welcome-popup");
+        const closeBtn = document.getElementById("close-popup-btn");
+        const helpBtn = document.getElementById("help-button");
+
+        // Função para mostrar o pop-up
+        const showPopup = () => { popup.style.display = "flex"; };
+
+        // Função para esconder o pop-up
+        const hidePopup = () => { popup.style.display = "none"; };
+
+        // Verifica se é a primeira visita
+        if (!sessionStorage.getItem("hasVisited")) {
+            showPopup();
+            sessionStorage.setItem("hasVisited", "true");
+        }
+
+        // Eventos para fechar e abrir o pop-up
+        closeBtn.addEventListener("click", hidePopup);
+        helpBtn.addEventListener("click", showPopup);
+        popup.addEventListener("click", function(event) {
+            if (event.target === popup) { // Fecha se clicar fora do conteúdo
+                hidePopup();
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

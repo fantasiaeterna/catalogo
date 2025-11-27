@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Fantasia Eterna</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <h1>Login / Cadastro</h1>
+    <a href="index.html">Voltar para a Loja</a>
+
+    <form id="login-form">
+        <label for="email">Email:</label>
+        <input type="email" id="email" required>  
+  
+
+
+        <label for="password">Senha:</label>
+        <input type="password" id="password" required>  
+  
+
+
+        <button type="submit">Entrar</button>
+        <button type="button" id="register-button">Cadastrar</button>
+    </form>
+
+    <p id="auth-message" style="color: red;"></p>
+
+    <script type="module" src="js/auth.js"></script>
+</body>
+</html>
