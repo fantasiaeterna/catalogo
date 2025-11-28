@@ -178,7 +178,7 @@
         });
     </script>
 
-    <script type="module">
+<script type="module">
         import { getCart, getCartTotal, saveOrder } from "./js/cart.js";
 
         // Função para exibir os itens do carrinho no checkout
@@ -196,23 +196,19 @@
 
             let html = "";
             cart.forEach((item, index) => {
-                // CORREÇÃO 1: Garante que price e quantity sejam números (ou 0/1) para evitar NaN
                 const itemTotal = (item.price || 0) * (item.quantity || 1);
                 
                 let detailsHtml = '';
                 if (item.size) detailsHtml += `<span>Tamanho: ${item.size}</span>`;
                 if (item.color) detailsHtml += `<span> | Cor: ${item.color}</span>`;
-                if (item.observation) detailsHtml += `  
-<span>Detalhes Encomenda: ${item.observation}</span>`;
+                if (item.observation) detailsHtml += `<br><span>Detalhes Encomenda: ${item.observation}</span>`;
                 
                 const isEncomendaClass = item.isEncomenda ? 'encomenda-item' : '';
                 
                 html += `
                     <li class="cart-item ${isEncomendaClass}">
                         <div class="item-details">
-                            <!-- CORREÇÃO 2: Garante que name e quantity sejam exibidos (ou fallback) -->
                             <h4>${item.name || 'Produto Desconhecido'} (x${item.quantity || 1})</h4>
-                            <!-- CORREÇÃO 3: Garante que price seja exibido (ou 0) -->
                             <p>Preço Unitário: R$ ${(item.price || 0).toFixed(2)}</p>
                             ${detailsHtml}
                         </div>
@@ -263,4 +259,3 @@
 
 </body>
 </html>
-
