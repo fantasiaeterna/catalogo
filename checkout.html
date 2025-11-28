@@ -2,52 +2,103 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Finalizar Compra</title>
+    <title>Checkout - Catálogo Fantasia Eterna</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Importação da fonte Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
     <link rel="stylesheet" href="css/style.css">
+    <!-- Ícones Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
-<!-- CABEÇALHO FIXO -->
-<header id="main-header">
-    <div class="header-content">
-        <!-- MUDANÇA: Título do site alterado -->
-        <a href="index.html" class="logo">Catálogo - Fantasia Eterna</a>
-        <div class="header-icons">
-            <!-- MUDANÇA: Adição do botão de Dúvida -->
-            <a href="#" id="help-button" title="Como funciona?"><i class="fas fa-question-circle"></i></a>
-            <a href="cart.html" title="Ver Carrinho"><i class="fas fa-shopping-cart"></i></a>
-            <a href="profile.html" title="Minha Conta"><i class="fas fa-user"></i></a>
+    <!-- CABEÇALHO FIXO -->
+    <header id="main-header">
+        <div class="header-content">
+            <a href="index.html" class="logo">Catálogo - Fantasia Eterna</a>
+            <div class="header-icons">
+                <a href="#" id="help-button" title="Como funciona?"><i class="fas fa-question-circle"></i></a>
+                <a href="cart.html" title="Ver Carrinho"><i class="fas fa-shopping-cart"></i></a>
+                <a href="profile.html" title="Minha Conta"><i class="fas fa-user"></i></a>
+            </div>
         </div>
-    </div>
-</header>
+    </header>
 
+    <main class="content-container">
+        <div id="checkout-container">
+            <h1>Finalizar Compra</h1>
+            <a href="cart.html" class="btn btn-secondary" style="margin-bottom: 20px;">Voltar para o Carrinho</a>
 
-    <!-- MUDANÇA: Adicionada a classe 'content-container' -->
-    <div id="checkout-container" class="content-container">
-        <h1>Finalizar Compra</h1>
-        <a href="cart.html" class="btn btn-secondary" style="margin-bottom: 20px;">Voltar para o Carrinho</a>
+            <div class="checkout-content">
+                <!-- Seção de Itens do Carrinho -->
+                <section class="checkout-section">
+                    <h2>Itens do Pedido</h2>
+                    <ul id="checkout-cart-items" class="cart-list">
+                        <!-- Itens do carrinho serão exibidos aqui pelo script -->
+                    </ul>
+                </section>
 
-       <div id="checkout-cart-items">
-            <h3>Resumo do seu Pedido</h3>
-            <!-- Itens do carrinho serão carregados aqui -->
-        </div>
-
-
-        <div id="payment-info">
-            <h3>Informações de Pagamento</h3>
-            <p>Todos os detalhes do pagamento, assim como detalhes da entrega serão tratados via DM do Instagram.</p>
-            
-            <h3>Regra de Encomendas</h3>
-            <p>Para encomendas, é necessário o pagamento de <strong>50% do valor total</strong> para que a produção seja iniciada. O restante do pagamento será combinado no momento da entrega.</p>
-            
             <div id="payment-details">
                 <!-- Detalhes do pagamento -->
             </div>
+    <hr>
 
+                <!-- Seção de Resumo e Pagamento -->
+                <section class="checkout-section payment-summary">
+                    <h2>Informações Importantes</h2>
+                    
+                    <div id="checkout-summary">
+                        <!-- Resumo do pedido (Total) será inserido aqui pelo script -->
+                    </div>
+
+        <div id="payment-info">
+            <h3>Formas de Pagamento</h3>
+  <p>
+    Para sua comodidade, aceitamos pagamentos via Pix ou transferência bancária. Todos os detalhes 
+    para a conclusão do pagamento serão combinados e tratados com segurança através da nossa DM no Instagram.
+  </p>            
+            
+            <h3>Regra de Encomendas</h3>
+  <p>
+    Para peças feitas sob encomenda, solicitamos o pagamento de um sinal de 50% do valor total para 
+    o início da produção. O pagamento dos 50% restantes será combinado no momento da entrega do seu pedido.
+  </p>
+
+  <h3>Opções de Entrega e Retirada</h3>
+  
+  <ul>
+    <li>
+      <strong>Delivery:</strong> Realizamos entregas em Belo Horizonte e região metropolitana. 
+      O valor do frete é calculado e informado a você após a confirmação do pedido e o fornecimento 
+      do seu endereço.
+    </li>
+    <li>
+      <strong>Envio para Outras Localidades:</strong> Para clientes de outras cidades e estados, 
+      oferecemos a opção de envio sob solicitação. Nestes casos, todos os custos de frete e envio 
+      são de responsabilidade do cliente.
+    </li>
+    <li>
+      <strong>Retirada no Local:</strong> Se preferir, você pode retirar o seu pedido pessoalmente 
+      em dois locais: no Centro ou no bairro Floresta. O horário para a retirada deve ser combinado 
+      previamente para garantir a sua comodidade.
+    </li>
+  </ul>
+  <p>
+    Em caso de qualquer dúvida, não hesite em entrar em contato conosco. Estamos à disposição para ajudar!
+  </p>
+  
+<div class="disclaimer-checkout">
+  <p class="disclaimer-text">
+    Ao prosseguir, você confirma que leu e compreendeu todas as informações acima, 
+    concorda com nosso processo de compra, formas de pagamento, políticas de entrega 
+    e está ciente de todas as condições estabelecidas.
+  </p>
+</div>
+  
             <button id="next-step-button" class="btn btn-primary">Próximo Passo (Confirmar Pedido)</button>
         </div>
     </div>
@@ -67,10 +118,10 @@
     </script>
 
     <!-- POP-UP DE BOAS-VINDAS -->
-<div id="welcome-popup" class="popup-overlay">
-    <div class="popup-content">
-        <button id="close-popup-btn" class="popup-close-btn">&times;</button>
-<section class="como-funciona">
+    <div id="welcome-popup" class="popup-overlay">
+        <div class="popup-content">
+            <button id="close-popup-btn" class="popup-close-btn">&times;</button>
+        <section class="como-funciona">
   <h1>Como Funciona o Nosso Processo de Compra</h1>
   
   <p>
@@ -88,84 +139,127 @@
   
   <p>
     Ao concluir a simulação da sua compra em nosso site, você encontrará um botão para ser 
-    redirecionado(a) diretamente para a nossa DM (Direct Message) no Instagram. Uma mensagem 
+    redirecionado diretamente para a nossa DM no Instagram. Uma mensagem 
     personalizada com os itens do seu pedido será gerada automaticamente, facilitando o processo para você.
   </p>
-
-  <h2>Formas de Pagamento</h2>
-  
-  <p>
-    Para sua comodidade, aceitamos pagamentos via Pix ou transferência bancária. Todos os detalhes 
-    para a conclusão do pagamento serão combinados e tratados com segurança através da nossa DM no Instagram.
-  </p>
-
-  <h2>Opções de Entrega e Retirada</h2>
-  
-  <ul>
-    <li>
-      <strong>Delivery:</strong> Realizamos entregas em Belo Horizonte e região metropolitana. 
-      O valor do frete é calculado e informado a você após a confirmação do pedido e o fornecimento 
-      do seu endereço.
-    </li>
-    <li>
-      <strong>Envio para Outras Localidades:</strong> Para clientes de outras cidades e estados, 
-      oferecemos a opção de envio sob solicitação. Nestes casos, todos os custos de frete e envio 
-      são de responsabilidade do cliente.
-    </li>
-    <li>
-      <strong>Retirada no Local:</strong> Se preferir, você pode retirar o seu pedido pessoalmente 
-      em dois locais: no Centro ou no bairro Floresta. O horário para a retirada deve ser combinado 
-      previamente para garantir a sua comodidade.
-    </li>
-  </ul>
-
-  <h2>Encomendas</h2>
-  
-  <p>
-    Para peças feitas sob encomenda, solicitamos o pagamento de um sinal de 50% do valor total para 
-    o início da produção. O pagamento dos 50% restantes será combinado no momento da entrega do seu pedido.
-  </p>
-
-  <hr>
-
-  <p>
-    Em caso de qualquer dúvida, não hesite em entrar em contato conosco. Estamos à disposição para ajudar!
-  </p>
-</section>
-
     </div>
 </div>
 
-<!-- Script para controlar o Pop-up -->
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const popup = document.getElementById("welcome-popup");
-        const closeBtn = document.getElementById("close-popup-btn");
-        const helpBtn = document.getElementById("help-button");
+    <!-- Script para controlar o Pop-up -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const popup = document.getElementById("welcome-popup");
+            const closeBtn = document.getElementById("close-popup-btn");
+            const helpBtn = document.getElementById("help-button");
 
-        // Função para mostrar o pop-up
-        const showPopup = () => { popup.style.display = "flex"; };
+            // Função para mostrar o pop-up
+            const showPopup = (e) => { 
+                if (e) e.preventDefault();
+                popup.style.display = "flex"; 
+            };
 
-        // Função para esconder o pop-up
-        const hidePopup = () => { popup.style.display = "none"; };
+            // Função para esconder o pop-up
+            const hidePopup = () => { popup.style.display = "none"; };
 
-        // Verifica se é a primeira visita
-        if (!sessionStorage.getItem("hasVisited")) {
-            showPopup();
-            sessionStorage.setItem("hasVisited", "true");
+            // Verifica se é a primeira visita
+            if (!sessionStorage.getItem("hasVisited")) {
+                showPopup();
+                sessionStorage.setItem("hasVisited", "true");
+            }
+
+            // Eventos para fechar e abrir o pop-up
+            closeBtn.addEventListener("click", hidePopup);
+            helpBtn.addEventListener("click", showPopup);
+            popup.addEventListener("click", function(event) {
+                if (event.target === popup) { // Fecha se clicar fora do conteúdo
+                    hidePopup();
+                }
+            });
+        });
+    </script>
+
+    <script type="module">
+        import { getCart, getCartTotal, saveOrder } from "./js/cart.js";
+
+        // Função para exibir os itens do carrinho no checkout
+        function displayCheckoutItems() {
+            const cart = getCart();
+            const container = document.getElementById('checkout-cart-items');
+            
+            if (!container) return;
+
+            if (cart.length === 0) {
+                container.innerHTML = "<p style='text-align: center; padding: 20px;'>Seu carrinho está vazio. <a href='index.html'>Voltar ao catálogo</a></p>";
+                document.getElementById('next-step-button').disabled = true;
+                return;
+            }
+
+            let html = "";
+            cart.forEach((item, index) => {
+                // CORREÇÃO 1: Garante que price e quantity sejam números (ou 0/1) para evitar NaN
+                const itemTotal = (item.price || 0) * (item.quantity || 1);
+                
+                let detailsHtml = '';
+                if (item.size) detailsHtml += `<span>Tamanho: ${item.size}</span>`;
+                if (item.color) detailsHtml += `<span> | Cor: ${item.color}</span>`;
+                if (item.observation) detailsHtml += `  
+<span>Detalhes Encomenda: ${item.observation}</span>`;
+                
+                const isEncomendaClass = item.isEncomenda ? 'encomenda-item' : '';
+                
+                html += `
+                    <li class="cart-item ${isEncomendaClass}">
+                        <div class="item-details">
+                            <!-- CORREÇÃO 2: Garante que name e quantity sejam exibidos (ou fallback) -->
+                            <h4>${item.name || 'Produto Desconhecido'} (x${item.quantity || 1})</h4>
+                            <!-- CORREÇÃO 3: Garante que price seja exibido (ou 0) -->
+                            <p>Preço Unitário: R$ ${(item.price || 0).toFixed(2)}</p>
+                            ${detailsHtml}
+                        </div>
+                        <div class="item-price">R$ ${itemTotal.toFixed(2)}</div>
+                    </li>
+                `;
+            });
+
+            container.innerHTML = html;
         }
 
-        // Eventos para fechar e abrir o pop-up
-        closeBtn.addEventListener("click", hidePopup);
-        helpBtn.addEventListener("click", showPopup);
-        popup.addEventListener("click", function(event) {
-            if (event.target === popup) { // Fecha se clicar fora do conteúdo
-                hidePopup();
+        // Função para exibir o resumo do pagamento no checkout
+        function displayCheckoutSummary() {
+            const total = getCartTotal();
+            const halfTotal = total / 2; // 50% do valor total
+
+            const summaryDiv = document.getElementById('checkout-summary');
+            const detailsDiv = document.getElementById('payment-details');
+
+            if (!summaryDiv || !detailsDiv) return;
+
+            // 1. Resumo do Pedido
+            summaryDiv.innerHTML = `
+                <h3>Resumo do Pedido</h3>
+                <p>Valor Total do Pedido: <strong>R$ ${total.toFixed(2)}</strong></p>
+                <hr>
+            `;
+
+            // 2. Detalhes do Pagamento
+            detailsDiv.innerHTML = `
+                <p>Valor Total a Pagar: <strong>R$ ${total.toFixed(2)}</strong></p>
+                <p>Valor Mínimo para Encomendas (50%): <strong>R$ ${halfTotal.toFixed(2)}</strong></p>
+            `;
+        }
+        
+        // Chamada das funções ao carregar a página
+        displayCheckoutItems();
+        displayCheckoutSummary();
+
+        document.getElementById('next-step-button').addEventListener('click', async () => {
+            const orderSaved = await saveOrder();
+            if (orderSaved) {
+                // O saveOrder já limpa o carrinho, apenas redireciona
+                window.location.href = 'confirmation.html';
             }
         });
-    });
-</script>
+    </script>
 
 </body>
 </html>
-
