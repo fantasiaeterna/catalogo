@@ -42,26 +42,28 @@
     
     <!-- MUDANÇA CRUCIAL: Importa as funções necessárias e as anexa ao objeto global 'window' -->
     <script type="module">
-        import { loadProductDetails, addToCart, toggleFavorite } from './js/products.js';
-        
-        // Torna as funções disponíveis globalmente para os eventos 'onclick'
-        window.loadProductDetails = loadProductDetails;
-        window.addToCart = addToCart;
-        window.toggleFavorite = toggleFavorite;
-        
-        // Chama a função de carregamento
-        const productId = new URLSearchParams(window.location.search).get('id');
-        if (productId) {
-            loadProductDetails(productId);
-        }
-        
-        // Função auxiliar para trocar a imagem principal (também precisa ser global)
-        window.changeMainImage = (imgUrl) => {
-            document.getElementById('main-product-image').src = imgUrl;
-            document.querySelectorAll('.thumbnails-details img').forEach(img => img.classList.remove('active-thumb'));
-            document.querySelector(`.thumbnails-details img[src="${imgUrl}"]`).classList.add('active-thumb');
-        };
-    </script>
+    import { loadProductDetails, toggleFavorite } from './js/products.js';
+    import { addToCartFromDetail } from './js/cart.js';
+    
+    // Torna as funções disponíveis globalmente para os eventos 'onclick'
+    window.loadProductDetails = loadProductDetails;
+    window.addToCartFromDetail = addToCartFromDetail;
+    window.toggleFavorite = toggleFavorite;
+    
+    // Chama a função de carregamento
+    const productId = new URLSearchParams(window.location.search).get('id');
+    if (productId) {
+        loadProductDetails(productId);
+    }
+    
+    // Função auxiliar para trocar a imagem principal (também precisa ser global)
+    window.changeMainImage = (imgUrl) => {
+        document.getElementById('main-product-image').src = imgUrl;
+        document.querySelectorAll('.thumbnails-details img').forEach(img => img.classList.remove('active-thumb'));
+        document.querySelector(`.thumbnails-details img[src="${imgUrl}"]`).classList.add('active-thumb');
+    };
+</script>
+
 
     <!-- POP-UP DE BOAS-VINDAS -->
 <div id="welcome-popup" class="popup-overlay">
@@ -123,3 +125,4 @@
 
 </body>
 </html>
+
