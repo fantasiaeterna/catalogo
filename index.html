@@ -74,10 +74,9 @@
     import { auth } from "./js/firebase-config.js";
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
     import { loadProducts, populateCategoryFilter, populateColorFilter, toggleFavorite } from "./js/products.js"; 
-    import { addToCart, addToCartFromDetail, updateQuantity, removeItem, updateItemColor } from "./js/cart.js"; 
+    import { addToCart, updateQuantity, removeItem, updateItemColor } from "./js/cart.js"; 
 
     window.addToCart = addToCart; 
-    window.addToCartFromDetail = addToCartFromDetail;
     window.toggleFavorite = toggleFavorite;
     window.loadProducts = loadProducts; 
     window.updateQuantity = updateQuantity;
@@ -92,6 +91,7 @@
     populateCategoryFilter();
     populateColorFilter();
 </script>
+
 
 
 
