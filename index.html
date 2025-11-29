@@ -72,8 +72,9 @@
 <script type="module">
     import { auth } from "./js/firebase-config.js";
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-    import { loadProducts, populateCategoryFilter, populateColorFilter, toggleFavorite } from "./js/products.js"; 
-    import { addToCart, addToCartFromDetail } from "./js/cart.js"; 
+    import { loadProducts, populateCategoryFilter, populateColorFilter } from "./js/products.js"; 
+    import { addToCart, toggleFavorite } from "./js/products.js"; 
+    import { addToCartFromDetail } from "./js/cart.js"; 
 
     window.addToCart = addToCart; 
     window.addToCartFromDetail = addToCartFromDetail;
