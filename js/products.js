@@ -190,7 +190,7 @@ export async function loadProducts() {
                     </a>
                     <p class="price">R$ ${p.preco.toFixed(2)}</p>
                     ${colorSelect}
-                    <button onclick="addToCart('${p.id}', '${p.nome}', ${p.preco}, ${p.tipo === 'encomenda'}, '', document.getElementById('select-cores-${p.id}').value)">Adicionar ao Carrinho</button>
+<button onclick="addToCart('${p.id}', '${p.nome}', ${p.preco}, ${p.tipo === 'encomenda'}, '', 'select-cores-${p.id}')">Adicionar ao Carrinho</button>
                     <button onclick="toggleFavorite('${p.id}')" class="favorite-btn ${favoriteClass}"><i class="${favoriteIcon}"></i></button>
                 </div>
             `;
@@ -205,9 +205,15 @@ export async function loadProducts() {
 }
 
 // Funções de Carrinho e Favoritos
-export function addToCart(id, nome, preco, isEncomenda = false, size = '', color = '', observation = '') {
+export function addToCart(id, nome, preco, isEncomenda = false, size = '', colorSelectId = '', observation = '') {
+    let color = '';
+    if (colorSelectId) {
+        const colorSelect = document.getElementById(colorSelectId);
+        color = colorSelect ? colorSelect.value : '';
+    }
     addToCartReal(id, nome, preco, isEncomenda, size, color, observation);
 }
+
 
 // Implementação da função toggleFavorite
 export async function toggleFavorite(productId) {
@@ -348,3 +354,4 @@ onAuthStateChanged(auth, (user) => {
         populateColorFilter();
     }
 });
+
