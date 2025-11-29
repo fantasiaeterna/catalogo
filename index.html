@@ -73,15 +73,17 @@
 <script type="module">
     import { auth } from "./js/firebase-config.js";
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-    import { loadProducts, populateCategoryFilter, populateColorFilter, toggleFavorite } from "./js/products.js"; 
+    import { loadProducts, populateCategoryFilter, populateColorFilter, toggleFavorite, handleAddToCart } from "./js/products.js"; 
     import { addToCart, updateQuantity, removeItem, updateItemColor } from "./js/cart.js"; 
 
     window.addToCart = addToCart; 
+    window.handleAddToCart = handleAddToCart;
     window.toggleFavorite = toggleFavorite;
     window.loadProducts = loadProducts; 
     window.updateQuantity = updateQuantity;
     window.removeItem = removeItem;
     window.updateItemColor = updateItemColor;
+
 
     onAuthStateChanged(auth, (user ) => {
         // A lógica de login/logout será tratada em profile.html
