@@ -51,11 +51,25 @@ export async function populateCategoryFilter() {
         snapshot.forEach(doc => {
             const p = doc.data();
             if (p.categoria) {
-                categories.add(p.categoria.trim()); // Adiciona trim() para remover espaços
+                categories.add(p.categoria.trim());
             }
         });
 
-        // Função para popular o filtro de cores
+        const sortedCategories = Array.from(categories).sort();
+        
+        sortedCategories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category;
+            option.textContent = category;
+            select.appendChild(option);
+        });
+
+    } catch (err) {
+        console.error("Erro ao popular filtro de categorias:", err);
+    }
+}
+
+// Função para popular o filtro de cores
 export async function populateColorFilter() {
     const select = document.getElementById("color-filter");
     if (!select) return;
@@ -88,72 +102,17 @@ export async function populateColorFilter() {
     }
 }
 
-        // Ordena as categorias alfabeticamente
-        const sortedCategories = Array.from(categories).sort();
-        
-        sortedCategories.forEach(category => {
-            const option = document.createElement('option');
-            option.value = category;
-            option.textContent = category;
-            select.appendChild(option);
-        });
-
-    } catch (err) {
-        console.error("Erro ao popular filtro de categorias:", err);
-    }
-}
-
-// Função para popular os novos filtros (Tamanho e Cor)
-export async function populateSizeAndColorFilters() {
-    const sizeSelect = document.getElementById("size-filter");
-    const colorSelect = document.getElementById("color-filter");
-    if (!sizeSelect || !colorSelect) return;
-
-    sizeSelect.innerHTML = '<option value="">Todos os Tamanhos</option>';
-    colorSelect.innerHTML = '<option value="">Todas as Cores</option>';
-
-    try {
-        const q = query(collection(db, "produtos"));
-        const snapshot = await getDocs(q);
-        
-        const sizes = new Set();
-        const colors = new Set();
-        
-        snapshot.forEach(doc => {
-            const p = doc.data();
-            if (p.tamanhos && Array.isArray(p.tamanhos)) {
-                p.tamanhos.forEach(size => sizes.add(size));
-            }
-            if (p.cores && Array.isArray(p.cores)) {
-                p.cores.forEach(color => colors.add(color));
-            }
-        });
-
-        sizes.forEach(size => {
-            sizeSelect.innerHTML += `<option value="${size}">${size}</option>`;
-        });
-        colors.forEach(color => {
-            colorSelect.innerHTML += `<option value="${color}">${color}</option>`;
-        });
-
-    } catch (err) {
-        console.error("Erro ao popular filtros de tamanho/cor:", err);
-    }
-}
-
 // Função para carregar produtos com filtros e ordenação
 export async function loadProducts() {
     const container = document.getElementById("product-list");
-    if (!container) return; // Se não estiver na página inicial, sai
+    if (!container) return;
 
     const categoryFilter = document.getElementById("category-filter");
     const sortOrder = document.getElementById("sort-order");
-    const sizeFilter = document.getElementById("size-filter"); 
     const colorFilter = document.getElementById("color-filter"); 
 
     container.innerHTML = "Carregando produtos...";
     
-    // MUDANÇA: Busca os favoritos APÓS a autenticação ser verificada
     await fetchUserFavorites(); 
 
     const selectedCategory = categoryFilter ? categoryFilter.value : "";
@@ -180,25 +139,18 @@ export async function loadProducts() {
         });
 
         // FILTRAGEM POR COR
-if (selectedColor) {
-    products = products.filter(p => 
-        p.cores && p.cores.includes(selectedColor)
-    );
-}
-
-        // FILTRAGEM NO LADO DO CLIENTE (para Tamanho e Cor)
-        products = products.filter(p => {
-            const matchesSize = !selectedSize || (p.tamanhos && p.tamanhos.includes(selectedSize));
-            const matchesColor = !selectedColor || (p.cores && p.cores.includes(selectedColor));
-            return matchesSize && matchesColor;
-        });
+        if (selectedColor) {
+            products = products.filter(p => 
+                p.cores && p.cores.includes(selectedColor)
+            );
+        }
         
         if (products.length === 0) {
             container.innerHTML = "Nenhum produto encontrado com os filtros selecionados.";
             return;
         }
 
-        // Ordenação no lado do cliente
+        // Ordenação por preço
         products.sort((a, b) => {
             if (order === "asc") {
                 return a.preco - b.preco;
@@ -215,6 +167,19 @@ if (selectedColor) {
             const favoriteClass = isFavorited ? 'favorited' : '';
             const favoriteIcon = isFavorited ? 'fas fa-heart' : 'far fa-heart';
             
+            // Gera opções de cores para o card
+            const colorOptions = p.cores ? p.cores.map(color => `<option value="${color}">${color}</option>`).join('') : '';
+            
+            const colorSelect = p.cores && p.cores.length > 0 ? `
+                <div class="filter-group">
+                    <label for="select-cores-${p.id}">Cor:</label>
+                    <select id="select-cores-${p.id}">
+                        <option value="">Selecione uma cor</option>
+                        ${colorOptions}
+                    </select>
+                </div>
+            ` : '';
+            
             html += `
                 <div class="produto">
                     <a href="product.html?id=${p.id}">
@@ -224,7 +189,8 @@ if (selectedColor) {
                         <h3>${p.nome}</h3>
                     </a>
                     <p class="price">R$ ${p.preco.toFixed(2)}</p>
-                    <button onclick="addToCart('${p.id}', '${p.nome}', ${p.preco}, ${p.tipo === 'encomenda'})">Adicionar ao Carrinho</button>
+                    ${colorSelect}
+                    <button onclick="addToCart('${p.id}', '${p.nome}', ${p.preco}, ${p.tipo === 'encomenda'}, '', document.getElementById('select-cores-${p.id}').value)">Adicionar ao Carrinho</button>
                     <button onclick="toggleFavorite('${p.id}')" class="favorite-btn ${favoriteClass}"><i class="${favoriteIcon}"></i></button>
                 </div>
             `;
@@ -239,12 +205,8 @@ if (selectedColor) {
 }
 
 // Funções de Carrinho e Favoritos
-export function addToCart(id, nome, preco, isEncomenda = false) {
-    const selectedSize = document.getElementById('select-tamanho')?.value || '';
-    const selectedColor = document.getElementById('select-cores')?.value || '';
-    const observation = document.getElementById(`obs-${id}`)?.value || '';
-    
-    addToCartReal(id, nome, preco, isEncomenda, selectedSize, selectedColor, observation);
+export function addToCart(id, nome, preco, isEncomenda = false, size = '', color = '', observation = '') {
+    addToCartReal(id, nome, preco, isEncomenda, size, color, observation);
 }
 
 // Implementação da função toggleFavorite
@@ -275,10 +237,7 @@ export async function toggleFavorite(productId) {
             }
         }
         
-        // MUDANÇA: Recarrega a lista de produtos para atualizar o ícone
         loadProducts(); 
-        
-        // MUDANÇA: Atualiza o ícone na página de detalhes, se estiver nela
         updateFavoriteIcon(productId);
         
     } catch (error) {
@@ -316,7 +275,6 @@ export async function loadProductDetails(productId) {
 
         const p = docSnap.data();
         
-        // MUDANÇA: Busca favoritos para definir o estado inicial do botão
         await fetchUserFavorites();
         const isFavorited = userFavorites.includes(productId);
         const favoriteClass = isFavorited ? 'favorited' : '';
@@ -326,17 +284,17 @@ export async function loadProductDetails(productId) {
             `<img src="${imgUrl}" alt="Imagem ${index + 1}" onclick="changeMainImage('${imgUrl}')" class="${index === 0 ? 'active-thumb' : ''}">`
         ).join('');
         
-        // Geração dos campos de seleção (Tamanho e Cores)
+        // Geração dos campos de seleção de cores
         const colorOptions = p.cores ? p.cores.map(color => `<option value="${color}">${color}</option>`).join('') : '';
         const colorSelect = p.cores && p.cores.length > 0 ? `
             <div class="filter-group">
                 <label for="select-cores">Cor:</label>
                 <select id="select-cores">
+                    <option value="">Selecione uma cor</option>
                     ${colorOptions}
                 </select>
             </div>
         ` : '';
-
 
         // HTML para a página de detalhes (product.html)
         container.innerHTML = `
@@ -355,7 +313,6 @@ export async function loadProductDetails(productId) {
                     
                     ${colorSelect}
                     
-                    <!-- Campos de Encomenda (Se aplicável) -->
                     ${p.tipo === 'encomenda' ? `
                         <div class="custom-order-fields">
                             <h3>Detalhes da Encomenda</h3>
@@ -364,7 +321,7 @@ export async function loadProductDetails(productId) {
                         </div>
                     ` : ''}
 
-                    <button onclick="addToCart('${productId}', '${p.nome}', ${p.preco}, ${p.tipo === 'encomenda'})">Adicionar ao Carrinho</button>
+                    <button onclick="addToCart('${productId}', '${p.nome}', ${p.preco}, ${p.tipo === 'encomenda'}, '', document.getElementById('select-cores').value)">Adicionar ao Carrinho</button>
                     <button onclick="toggleFavorite('${productId}')" class="favorite-btn ${favoriteClass}"><i class="${favoriteIcon}"></i></button>
                 </div>
             </div>
@@ -383,15 +340,11 @@ export async function loadProductDetails(productId) {
     }
 }
 
-// MUDANÇA: Adiciona listener para carregar produtos e filtros após a autenticação
+// Adiciona listener para carregar produtos e filtros após a autenticação
 onAuthStateChanged(auth, (user) => {
-    // Carrega produtos e filtros apenas na página inicial
     if (document.getElementById("product-list")) {
         loadProducts();
         populateCategoryFilter();
-        populateSizeAndColorFilters();
+        populateColorFilter();
     }
 });
-
-
-
