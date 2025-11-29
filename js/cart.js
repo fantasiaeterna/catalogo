@@ -14,7 +14,7 @@ function saveCart(cart) {
 }
 
 // MUDANÇA: Função completa para adicionar item (usada na página de detalhes)
-export function addToCartFull(id, name, price, isEncomenda = false, size = '', color = '', observation = '') {
+export function addToCartFull(id, name, price, isEncomenda = false, color = '', observation = '') {
     const cart = getCart();
     
     // Para produtos com opções ou encomendas, sempre adicionamos como um novo item
@@ -31,7 +31,7 @@ export function addToCartFull(id, name, price, isEncomenda = false, size = '', c
 }
 
 // MUDANÇA: Função simples para adicionar item (usada na página inicial)
-export function addToCart(id, name, price, isEncomenda = false, size = '', color = '', observation = '') {
+export function addToCart(id, name, price, isEncomenda = false, color = '', observation = '') {
     const cart = getCart();
     
     // Na página inicial, tentamos agrupar itens idênticos (sem opções extras)
@@ -174,7 +174,14 @@ export function displayCheckout() {
                 item.color ? `Cor: ${item.color}` : null,
                 item.observation ? `Obs: ${item.observation}` : null
             ].filter(Boolean).join(" | ");
-
+            
+// No cart.js, quando renderizar cada item do carrinho:
+const colorSelect = item.color ? `
+    <select onchange="updateItemColor('${item.id}', this.value)">
+        <option value="${item.color}" selected>${item.color}</option>
+        <!-- Aqui você precisa buscar as cores disponíveis do produto -->
+    </select>
+` : '';
             itemsHtml += `<li>${item.quantity}x ${item.nome} ${optionsHtml ? `(${optionsHtml})` : ""} - <strong>R$ ${(item.preco * item.quantity).toFixed(2)}</strong></li>`;
         });
         itemsHtml += "</ul>";
@@ -228,3 +235,4 @@ export async function saveOrder() {
         return false;
     }
 }
+
