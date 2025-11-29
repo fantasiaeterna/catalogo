@@ -51,11 +51,14 @@ export async function populateCategoryFilter() {
         snapshot.forEach(doc => {
             const p = doc.data();
             if (p.categoria) {
-                categories.add(p.categoria);
+                categories.add(p.categoria.trim()); // Adiciona trim() para remover espaços
             }
         });
 
-        categories.forEach(category => {
+        // Ordena as categorias alfabeticamente
+        const sortedCategories = Array.from(categories).sort();
+        
+        sortedCategories.forEach(category => {
             const option = document.createElement('option');
             option.value = category;
             option.textContent = category;
@@ -362,3 +365,4 @@ onAuthStateChanged(auth, (user) => {
         populateSizeAndColorFilters();
     }
 });
+
