@@ -14,8 +14,21 @@ function saveCart(cart) {
 }
 
 // Função para adicionar item ao carrinho (página inicial - sem cores obrigatórias)
-export function addToCart(id, name, price, isEncomenda = false) {
+export async function addToCart(id, name, price, isEncomenda = false) {
     const cart = getCart();
+    
+    // Busca a imagem do produto no Firebase
+    let imageUrl = '';
+    try {
+        const docRef = doc(db, "produtos", id);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            const product = docSnap.data();
+            imageUrl = product.imagens && product.imagens.length > 0 ? product.imagens[0] : '';
+        }
+    } catch (err) {
+        console.error("Erro ao buscar imagem do produto:", err);
+    }
     
     // Na página inicial, tentamos agrupar itens idênticos (sem opções extras)
     if (!isEncomenda) {
@@ -33,6 +46,17 @@ export function addToCart(id, name, price, isEncomenda = false) {
             return;
         }
     }
+    
+    // Se for encomenda ou novo item simples
+    cart.push({ id, name, price, quantity: 1, isEncomenda, color: '', observation: '', imageUrl: imageUrl });
+    saveCart(cart);
+    alert(`${name} adicionado ao carrinho!`);
+    
+    if (document.getElementById('cart-items')) {
+        loadCart();
+    }
+}
+
     
     // Se for encomenda ou novo item simples
     cart.push({ id, name, price, quantity: 1, isEncomenda, color: '', observation: '', imageUrl: '' });
@@ -198,11 +222,15 @@ export function loadCart() {
             `;
         }
         
-        html += `
+               html += `
             <li class="cart-item ${isEncomendaClass}">
-                <img src="${item.imageUrl || 'placeholder.png'}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: cover;">
+                <a href="product.html?id=${item.id}" style="text-decoration: none; color: inherit; cursor: pointer;">
+                    <img src="${item.imageUrl || 'placeholder.png'}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: cover;">
+                </a>
                 <div class="item-details">
-                    <h4>${item.name}</h4>
+                    <a href="product.html?id=${item.id}" style="text-decoration: none; color: inherit; cursor: pointer;">
+                        <h4>${item.name}</h4>
+                    </a>
                     <p>Preço Unitário: R$ ${item.price.toFixed(2)}</p>
                     ${detailsHtml}
                     ${colorSelectHtml}
@@ -295,3 +323,4 @@ export async function saveOrder() {
         return false;
     }
 }
+
