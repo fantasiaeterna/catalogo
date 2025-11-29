@@ -158,7 +158,6 @@ export async function loadProducts() {
 
     const selectedCategory = categoryFilter ? categoryFilter.value : "";
     const order = sortOrder ? sortOrder.value : "asc";
-    const selectedSize = sizeFilter ? sizeFilter.value : ""; 
     const selectedColor = colorFilter ? colorFilter.value : ""; 
 
     try {
@@ -179,6 +178,13 @@ export async function loadProducts() {
         snapshot.forEach(doc => {
             products.push({ id: doc.id, ...doc.data() });
         });
+
+        // FILTRAGEM POR COR
+if (selectedColor) {
+    products = products.filter(p => 
+        p.cores && p.cores.includes(selectedColor)
+    );
+}
 
         // FILTRAGEM NO LADO DO CLIENTE (para Tamanho e Cor)
         products = products.filter(p => {
@@ -321,18 +327,7 @@ export async function loadProductDetails(productId) {
         ).join('');
         
         // Geração dos campos de seleção (Tamanho e Cores)
-        const sizeOptions = p.tamanhos ? p.tamanhos.map(size => `<option value="${size}">${size}</option>`).join('') : '';
         const colorOptions = p.cores ? p.cores.map(color => `<option value="${color}">${color}</option>`).join('') : '';
-
-        const sizeSelect = p.tamanhos && p.tamanhos.length > 0 ? `
-            <div class="filter-group">
-                <label for="select-tamanho">Tamanho:</label>
-                <select id="select-tamanho">
-                    ${sizeOptions}
-                </select>
-            </div>
-        ` : '';
-        
         const colorSelect = p.cores && p.cores.length > 0 ? `
             <div class="filter-group">
                 <label for="select-cores">Cor:</label>
@@ -358,7 +353,6 @@ export async function loadProductDetails(productId) {
                     <p class="price">R$ ${p.preco.toFixed(2)}</p>
                     <p>${p.descricao}</p>
                     
-                    ${sizeSelect}
                     ${colorSelect}
                     
                     <!-- Campos de Encomenda (Se aplicável) -->
@@ -398,5 +392,6 @@ onAuthStateChanged(auth, (user) => {
         populateSizeAndColorFilters();
     }
 });
+
 
 
