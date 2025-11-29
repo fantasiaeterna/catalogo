@@ -35,7 +35,7 @@ export function addToCart(id, name, price, isEncomenda = false) {
     }
     
     // Se for encomenda ou novo item simples
-    cart.push({ id, name, price, quantity: 1, isEncomenda, color: '', observation: '' });
+    cart.push({ id, name, price, quantity: 1, isEncomenda, color: '', observation: '', imageUrl: '' });
     saveCart(cart);
     alert(`${name} adicionado ao carrinho!`);
     
@@ -49,7 +49,7 @@ export async function addToCartFromDetail(productId, name, price, isEncomenda) {
     const colorSelect = document.getElementById('select-cores');
     const observation = document.getElementById(`obs-${productId}`);
     
-    // Busca o produto para saber se ele tem cores
+    // Busca o produto para saber se ele tem cores e para pegar a imagem
     try {
         const docRef = doc(db, "produtos", productId);
         const docSnap = await getDoc(docRef);
@@ -64,32 +64,37 @@ export async function addToCartFromDetail(productId, name, price, isEncomenda) {
                     return;
                 }
             }
+            
+            // Pega a imagem do produto
+            const imageUrl = product.imagens && product.imagens.length > 0 ? product.imagens[0] : '';
+            
+            const color = colorSelect ? colorSelect.value : '';
+            const obs = observation ? observation.value : '';
+            
+            const cart = getCart();
+            
+            // Sempre adiciona como novo item na página de detalhes (para diferentes cores/observações)
+            cart.push({ 
+                id: productId, 
+                name, 
+                price, 
+                quantity: 1, 
+                isEncomenda, 
+                color, 
+                observation: obs,
+                imageUrl: imageUrl,
+                availableColors: product.cores || [] // Salva as cores disponíveis
+            });
+
+            saveCart(cart);
+            alert(`${name} adicionado ao carrinho!`);
+            
+            if (document.getElementById('cart-items')) {
+                loadCart();
+            }
         }
     } catch (err) {
         console.error("Erro ao buscar produto:", err);
-    }
-    
-    const color = colorSelect ? colorSelect.value : '';
-    const obs = observation ? observation.value : '';
-    
-    const cart = getCart();
-    
-    // Sempre adiciona como novo item na página de detalhes (para diferentes cores/observações)
-    cart.push({ 
-        id: productId, 
-        name, 
-        price, 
-        quantity: 1, 
-        isEncomenda, 
-        color, 
-        observation: obs 
-    });
-
-    saveCart(cart);
-    alert(`${name} adicionado ao carrinho!`);
-    
-    if (document.getElementById('cart-items')) {
-        loadCart();
     }
 }
 
@@ -178,13 +183,16 @@ export function loadCart() {
         
         // Se o item tem cor, mostra um select para alterar
         let colorSelectHtml = '';
-        if (item.color) {
+        if (item.color && item.availableColors && item.availableColors.length > 0) {
+            const colorOptions = item.availableColors.map(color => 
+                `<option value="${color}" ${color === item.color ? 'selected' : ''}>${color}</option>`
+            ).join('');
+            
             colorSelectHtml = `
                 <div class="color-select-container">
                     <label>Alterar Cor:</label>
                     <select onchange="updateItemColor(${index}, this.value)">
-                        <option value="${item.color}" selected>${item.color}</option>
-                        <!-- As cores serão adicionadas dinamicamente -->
+                        ${colorOptions}
                     </select>
                 </div>
             `;
@@ -192,7 +200,7 @@ export function loadCart() {
         
         html += `
             <li class="cart-item ${isEncomendaClass}">
-                <img src="${item.imageUrl || 'placeholder.png'}" alt="${item.name}">
+                <img src="${item.imageUrl || 'placeholder.png'}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: cover;">
                 <div class="item-details">
                     <h4>${item.name}</h4>
                     <p>Preço Unitário: R$ ${item.price.toFixed(2)}</p>
