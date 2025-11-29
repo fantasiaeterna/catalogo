@@ -14,7 +14,6 @@ import {
     setDoc
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { addToCart, addToCartFromDetail } from "./cart.js";
 
 // Variável global para armazenar os favoritos do usuário logado
 let userFavorites = [];
@@ -352,3 +351,4 @@ onAuthStateChanged(auth, (user) => {
         populateColorFilter();
     }
 });
+
