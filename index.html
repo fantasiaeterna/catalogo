@@ -52,14 +52,6 @@
                 </select>
             </div>
             
-            <!-- NOVOS CAMPOS DE FILTRO -->
-            <div class="filter-group">
-                <label for="size-filter">Filtrar por Tamanho:</label>
-                <select id="size-filter" onchange="loadProducts()">
-                    <option value="">Todos os Tamanhos</option>
-                </select>
-            </div>
-            
             <div class="filter-group">
                 <label for="color-filter">Filtrar por Cor:</label>
                 <select id="color-filter" onchange="loadProducts()">
@@ -78,26 +70,24 @@
 
     <!-- SCRIPTS -->
     <script type="module">
-        import { auth } from "./js/firebase-config.js";
-        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { loadProducts, populateCategoryFilter, populateColorFilter } from "./js/products.js"; 
-        import { addToCart, toggleFavorite } from "./js/products.js"; 
+    import { auth } from "./js/firebase-config.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { loadProducts, populateCategoryFilter, populateColorFilter } from "./js/products.js"; 
+    import { addToCart, toggleFavorite } from "./js/products.js"; 
 
-        // Expõe funções para o escopo global
-        window.addToCart = addToCart; 
-        window.toggleFavorite = toggleFavorite;
-        window.loadProducts = loadProducts; 
+    window.addToCart = addToCart; 
+    window.toggleFavorite = toggleFavorite;
+    window.loadProducts = loadProducts; 
 
-        // Lógica de Autenticação (Apenas para garantir que o auth esteja disponível se necessário )
-        onAuthStateChanged(auth, (user) => {
-            // A lógica de login/logout será tratada em profile.html
-        });
+    onAuthStateChanged(auth, (user ) => {
+        // A lógica de login/logout será tratada em profile.html
+    });
 
-        // Carrega produtos e popula o filtro de categorias
-        loadProducts();
-        populateCategoryFilter(); 
-        populateColorFilter();
-    </script>
+    loadProducts();
+    populateCategoryFilter();
+    populateColorFilter();
+</script>
+
 
     <!-- POP-UP DE BOAS-VINDAS -->
 <div id="welcome-popup" class="popup-overlay">
