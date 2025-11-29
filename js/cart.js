@@ -66,7 +66,6 @@ export async function addToCart(id, name, price, isEncomenda = false) {
     if (document.getElementById('cart-items')) {
         loadCart();
     }
-}
 
 // Função para adicionar item ao carrinho (página de detalhes - com validação de cores)
 export async function addToCartFromDetail(productId, name, price, isEncomenda) {
@@ -323,4 +322,5 @@ export async function saveOrder() {
         return false;
     }
 }
+
 
