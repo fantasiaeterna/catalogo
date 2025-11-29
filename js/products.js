@@ -14,7 +14,7 @@ import {
     setDoc
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { addToCart as addToCartReal } from "./cart.js";
+import { addToCart, addToCartFromDetail } from "./cart.js";
 
 // Variável global para armazenar os favoritos do usuário logado
 let userFavorites = [];
@@ -60,7 +60,7 @@ export async function populateCategoryFilter() {
         const categories = new Set();
         snapshot.forEach(doc => {
             const p = doc.data();
-            if (p.categoria) {
+            if (p.categoria && p.categoria.trim()) {
                 categories.add(p.categoria.trim());
             }
         });
@@ -164,15 +164,11 @@ export async function loadProducts() {
             return;
         }
 
-        // ORDENAÇÃO: Se houver filtro de preço, ordena por preço. Senão, embaralha aleatoriamente
-        if (order === "asc" || order === "desc") {
-            products.sort((a, b) => {
-                if (order === "asc") {
-                    return a.preco - b.preco;
-                } else {
-                    return b.preco - a.preco;
-                }
-            });
+        // ORDENAÇÃO: Embaralha aleatoriamente por padrão, ordena por preço se selecionado
+        if (order === "asc") {
+            products.sort((a, b) => a.preco - b.preco);
+        } else if (order === "desc") {
+            products.sort((a, b) => b.preco - a.preco);
         } else {
             // Embaralha aleatoriamente
             products = shuffleArray(products);
@@ -185,8 +181,6 @@ export async function loadProducts() {
             const isFavorited = userFavorites.includes(p.id);
             const favoriteClass = isFavorited ? 'favorited' : '';
             const favoriteIcon = isFavorited ? 'fas fa-heart' : 'far fa-heart';
-            
-            // NÃO mostra seleção de cor na página inicial
             
             html += `
                 <div class="produto">
@@ -209,16 +203,6 @@ export async function loadProducts() {
         console.error(err);
         container.innerHTML = "Erro ao carregar produtos.";
     }
-}
-
-// Funções de Carrinho e Favoritos
-export function addToCart(id, nome, preco, isEncomenda = false, size = '', colorSelectId = '', observation = '') {
-    let color = '';
-    if (colorSelectId) {
-        const colorSelect = document.getElementById(colorSelectId);
-        color = colorSelect ? colorSelect.value : '';
-    }
-    addToCartReal(id, nome, preco, isEncomenda, size, color, observation);
 }
 
 // Implementação da função toggleFavorite
@@ -300,19 +284,19 @@ export async function loadProductDetails(productId) {
         const colorOptions = p.cores ? p.cores.map(color => `<option value="${color}">${color}</option>`).join('') : '';
         const colorSelect = p.cores && p.cores.length > 0 ? `
             <div class="filter-group">
-                <label for="select-cores">Cor:</label>
+                <label for="select-cores">Cor: <span style="color: red;">*</span></label>
                 <select id="select-cores" required>
-                    <option value="">Selecione uma cor *</option>
+                    <option value="">Selecione uma cor</option>
                     ${colorOptions}
                 </select>
             </div>
         ` : '';
 
-        // Campo de observações
+        // Campo de observações com tamanho aumentado
         const observationField = `
             <div class="filter-group">
                 <label for="obs-${productId}">Observações:</label>
-                <textarea id="obs-${productId}" placeholder="Digite suas observações aqui..."></textarea>
+                <textarea id="obs-${productId}" placeholder="Digite suas observações aqui..." style="min-height: 120px; resize: vertical;"></textarea>
             </div>
         `;
 
@@ -358,23 +342,6 @@ export async function loadProductDetails(productId) {
         console.error("Erro ao carregar detalhes do produto:", err);
         container.innerHTML = "Erro ao carregar detalhes do produto.";
     }
-}
-
-// Função para adicionar ao carrinho a partir da página de detalhes
-export function addToCartFromDetail(productId, nome, preco, isEncomenda) {
-    const colorSelect = document.getElementById('select-cores');
-    const observation = document.getElementById(`obs-${productId}`);
-    
-    // Se o produto tem cores, obriga a seleção
-    if (colorSelect && !colorSelect.value) {
-        alert("Por favor, selecione uma cor antes de adicionar ao carrinho!");
-        return;
-    }
-    
-    const color = colorSelect ? colorSelect.value : '';
-    const obs = observation ? observation.value : '';
-    
-    addToCartReal(productId, nome, preco, isEncomenda, '', color, obs);
 }
 
 // Adiciona listener para carregar produtos e filtros após a autenticação
