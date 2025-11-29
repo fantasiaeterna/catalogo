@@ -55,6 +55,39 @@ export async function populateCategoryFilter() {
             }
         });
 
+        // Função para popular o filtro de cores
+export async function populateColorFilter() {
+    const select = document.getElementById("color-filter");
+    if (!select) return;
+
+    select.innerHTML = '<option value="">Todas as Cores</option>';
+
+    try {
+        const q = query(collection(db, "produtos"));
+        const snapshot = await getDocs(q);
+        
+        const colors = new Set();
+        snapshot.forEach(doc => {
+            const p = doc.data();
+            if (p.cores && Array.isArray(p.cores)) {
+                p.cores.forEach(color => colors.add(color.trim()));
+            }
+        });
+
+        const sortedColors = Array.from(colors).sort();
+        
+        sortedColors.forEach(color => {
+            const option = document.createElement('option');
+            option.value = color;
+            option.textContent = color;
+            select.appendChild(option);
+        });
+
+    } catch (err) {
+        console.error("Erro ao popular filtro de cores:", err);
+    }
+}
+
         // Ordena as categorias alfabeticamente
         const sortedCategories = Array.from(categories).sort();
         
@@ -365,4 +398,5 @@ onAuthStateChanged(auth, (user) => {
         populateSizeAndColorFilters();
     }
 });
+
 
