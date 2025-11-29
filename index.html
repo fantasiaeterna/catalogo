@@ -69,15 +69,19 @@
     </div>
 
     <!-- SCRIPTS -->
-    <script type="module">
+<script type="module">
     import { auth } from "./js/firebase-config.js";
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-    import { loadProducts, populateCategoryFilter, populateColorFilter } from "./js/products.js"; 
-    import { addToCart, toggleFavorite } from "./js/products.js"; 
+    import { loadProducts, populateCategoryFilter, populateColorFilter, toggleFavorite } from "./js/products.js"; 
+    import { addToCart, addToCartFromDetail } from "./js/cart.js"; 
 
     window.addToCart = addToCart; 
+    window.addToCartFromDetail = addToCartFromDetail;
     window.toggleFavorite = toggleFavorite;
     window.loadProducts = loadProducts; 
+    window.updateQuantity = updateQuantity;
+    window.removeItem = removeItem;
+    window.updateItemColor = updateItemColor;
 
     onAuthStateChanged(auth, (user ) => {
         // A lógica de login/logout será tratada em profile.html
@@ -87,6 +91,7 @@
     populateCategoryFilter();
     populateColorFilter();
 </script>
+
 
 
     <!-- POP-UP DE BOAS-VINDAS -->
