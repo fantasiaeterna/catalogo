@@ -80,7 +80,7 @@
     <script type="module">
         import { auth } from "./js/firebase-config.js";
         import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-        import { loadProducts, populateCategoryFilter } from "./js/products.js"; 
+import { loadProducts, populateCategoryFilter, populateColorFilter } from "./js/products.js"; 
         import { addToCart, toggleFavorite } from "./js/products.js"; 
 
         // Expõe funções para o escopo global
@@ -96,6 +96,7 @@
         // Carrega produtos e popula o filtro de categorias
         loadProducts();
         populateCategoryFilter(); 
+        populateColorFilter();
     </script>
 
     <!-- POP-UP DE BOAS-VINDAS -->
