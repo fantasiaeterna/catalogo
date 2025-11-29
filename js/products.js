@@ -36,7 +36,17 @@ async function fetchUserFavorites( ) {
     }
 }
 
-// Função para popular o filtro de categorias
+// Função para embaralhar array (Fisher-Yates)
+function shuffleArray(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
+
+// Função para popular o filtro de categorias (sem duplicatas)
 export async function populateCategoryFilter() {
     const select = document.getElementById("category-filter");
     if (!select) return;
@@ -69,7 +79,7 @@ export async function populateCategoryFilter() {
     }
 }
 
-// Função para popular o filtro de cores
+// Função para popular o filtro de cores (sem duplicatas)
 export async function populateColorFilter() {
     const select = document.getElementById("color-filter");
     if (!select) return;
@@ -84,7 +94,11 @@ export async function populateColorFilter() {
         snapshot.forEach(doc => {
             const p = doc.data();
             if (p.cores && Array.isArray(p.cores)) {
-                p.cores.forEach(color => colors.add(color.trim()));
+                p.cores.forEach(color => {
+                    if (color && color.trim()) {
+                        colors.add(color.trim());
+                    }
+                });
             }
         });
 
@@ -102,7 +116,7 @@ export async function populateColorFilter() {
     }
 }
 
-// Função para carregar produtos com filtros e ordenação
+// Função para carregar produtos com filtros e ordenação ALEATÓRIA
 export async function loadProducts() {
     const container = document.getElementById("product-list");
     if (!container) return;
@@ -150,14 +164,19 @@ export async function loadProducts() {
             return;
         }
 
-        // Ordenação por preço
-        products.sort((a, b) => {
-            if (order === "asc") {
-                return a.preco - b.preco;
-            } else {
-                return b.preco - a.preco;
-            }
-        });
+        // ORDENAÇÃO: Se houver filtro de preço, ordena por preço. Senão, embaralha aleatoriamente
+        if (order === "asc" || order === "desc") {
+            products.sort((a, b) => {
+                if (order === "asc") {
+                    return a.preco - b.preco;
+                } else {
+                    return b.preco - a.preco;
+                }
+            });
+        } else {
+            // Embaralha aleatoriamente
+            products = shuffleArray(products);
+        }
 
         let html = "";
         products.forEach(p => {
@@ -167,18 +186,7 @@ export async function loadProducts() {
             const favoriteClass = isFavorited ? 'favorited' : '';
             const favoriteIcon = isFavorited ? 'fas fa-heart' : 'far fa-heart';
             
-            // Gera opções de cores para o card
-            const colorOptions = p.cores ? p.cores.map(color => `<option value="${color}">${color}</option>`).join('') : '';
-            
-            const colorSelect = p.cores && p.cores.length > 0 ? `
-                <div class="filter-group">
-                    <label for="select-cores-${p.id}">Cor:</label>
-                    <select id="select-cores-${p.id}">
-                        <option value="">Selecione uma cor</option>
-                        ${colorOptions}
-                    </select>
-                </div>
-            ` : '';
+            // NÃO mostra seleção de cor na página inicial
             
             html += `
                 <div class="produto">
@@ -189,8 +197,7 @@ export async function loadProducts() {
                         <h3>${p.nome}</h3>
                     </a>
                     <p class="price">R$ ${p.preco.toFixed(2)}</p>
-                    ${colorSelect}
-<button onclick="addToCart('${p.id}', '${p.nome}', ${p.preco}, ${p.tipo === 'encomenda'}, '', 'select-cores-${p.id}')">Adicionar ao Carrinho</button>
+                    <button onclick="addToCart('${p.id}', '${p.nome}', ${p.preco}, ${p.tipo === 'encomenda'})">Adicionar ao Carrinho</button>
                     <button onclick="toggleFavorite('${p.id}')" class="favorite-btn ${favoriteClass}"><i class="${favoriteIcon}"></i></button>
                 </div>
             `;
@@ -213,7 +220,6 @@ export function addToCart(id, nome, preco, isEncomenda = false, size = '', color
     }
     addToCartReal(id, nome, preco, isEncomenda, size, color, observation);
 }
-
 
 // Implementação da função toggleFavorite
 export async function toggleFavorite(productId) {
@@ -295,12 +301,20 @@ export async function loadProductDetails(productId) {
         const colorSelect = p.cores && p.cores.length > 0 ? `
             <div class="filter-group">
                 <label for="select-cores">Cor:</label>
-                <select id="select-cores">
-                    <option value="">Selecione uma cor</option>
+                <select id="select-cores" required>
+                    <option value="">Selecione uma cor *</option>
                     ${colorOptions}
                 </select>
             </div>
         ` : '';
+
+        // Campo de observações
+        const observationField = `
+            <div class="filter-group">
+                <label for="obs-${productId}">Observações:</label>
+                <textarea id="obs-${productId}" placeholder="Digite suas observações aqui..."></textarea>
+            </div>
+        `;
 
         // HTML para a página de detalhes (product.html)
         container.innerHTML = `
@@ -318,16 +332,16 @@ export async function loadProductDetails(productId) {
                     <p>${p.descricao}</p>
                     
                     ${colorSelect}
+                    ${observationField}
                     
                     ${p.tipo === 'encomenda' ? `
                         <div class="custom-order-fields">
                             <h3>Detalhes da Encomenda</h3>
-                            <textarea id="obs-${productId}" placeholder="Ex: Alça fina, detalhes em dourado..."></textarea>
                             <p class="small-text">Lembre-se: Encomendas requerem 50% de pagamento antecipado.</p>
                         </div>
                     ` : ''}
 
-                    <button onclick="addToCart('${productId}', '${p.nome}', ${p.preco}, ${p.tipo === 'encomenda'}, '', document.getElementById('select-cores').value)">Adicionar ao Carrinho</button>
+                    <button onclick="addToCartFromDetail('${productId}', '${p.nome}', ${p.preco}, ${p.tipo === 'encomenda'})">Adicionar ao Carrinho</button>
                     <button onclick="toggleFavorite('${productId}')" class="favorite-btn ${favoriteClass}"><i class="${favoriteIcon}"></i></button>
                 </div>
             </div>
@@ -346,6 +360,23 @@ export async function loadProductDetails(productId) {
     }
 }
 
+// Função para adicionar ao carrinho a partir da página de detalhes
+export function addToCartFromDetail(productId, nome, preco, isEncomenda) {
+    const colorSelect = document.getElementById('select-cores');
+    const observation = document.getElementById(`obs-${productId}`);
+    
+    // Se o produto tem cores, obriga a seleção
+    if (colorSelect && !colorSelect.value) {
+        alert("Por favor, selecione uma cor antes de adicionar ao carrinho!");
+        return;
+    }
+    
+    const color = colorSelect ? colorSelect.value : '';
+    const obs = observation ? observation.value : '';
+    
+    addToCartReal(productId, nome, preco, isEncomenda, '', color, obs);
+}
+
 // Adiciona listener para carregar produtos e filtros após a autenticação
 onAuthStateChanged(auth, (user) => {
     if (document.getElementById("product-list")) {
@@ -354,4 +385,3 @@ onAuthStateChanged(auth, (user) => {
         populateColorFilter();
     }
 });
-
