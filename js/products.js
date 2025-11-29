@@ -190,7 +190,7 @@ export async function loadProducts() {
                         <h3>${p.nome}</h3>
                     </a>
                     <p class="price">R$ ${p.preco.toFixed(2)}</p>
-                    <button onclick="addToCart('${p.id}', '${p.nome}', ${p.preco}, ${p.tipo === 'encomenda'})">Adicionar ao Carrinho</button>
+<button onclick="handleAddToCart('${p.id}', '${p.nome}', ${p.preco}, ${p.tipo === 'encomenda'}, ${p.cores && p.cores.length > 0})">Adicionar ao Carrinho</button>
                     <button onclick="toggleFavorite('${p.id}')" class="favorite-btn ${favoriteClass}"><i class="${favoriteIcon}"></i></button>
                 </div>
             `;
@@ -343,6 +343,18 @@ export async function loadProductDetails(productId) {
     }
 }
 
+// Função para lidar com adição ao carrinho (verifica se tem cores)
+export async function handleAddToCart(productId, name, price, isEncomenda, hasColors) {
+    if (hasColors) {
+        // Se tem cores, redireciona para a página de detalhes
+        alert("Este produto tem cores. Por favor, selecione uma cor na página de detalhes.");
+        window.location.href = `product.html?id=${productId}`;
+    } else {
+        // Se não tem cores, adiciona direto
+        window.addToCart(productId, name, price, isEncomenda);
+    }
+}
+
 // Adiciona listener para carregar produtos e filtros após a autenticação
 onAuthStateChanged(auth, (user) => {
     if (document.getElementById("product-list")) {
@@ -351,4 +363,5 @@ onAuthStateChanged(auth, (user) => {
         populateColorFilter();
     }
 });
+
 
