@@ -47,6 +47,7 @@
             <div class="filter-group">
                 <label for="sort-order">Ordenar por Preço:</label>
                 <select id="sort-order" onchange="loadProducts()">
+                    <option value="">Padrão</option>
                     <option value="asc">Menor Preço</option>
                     <option value="desc">Maior Preço</option>
                 </select>
@@ -72,9 +73,8 @@
 <script type="module">
     import { auth } from "./js/firebase-config.js";
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-    import { loadProducts, populateCategoryFilter, populateColorFilter } from "./js/products.js"; 
-    import { addToCart, toggleFavorite } from "./js/products.js"; 
-    import { addToCartFromDetail } from "./js/cart.js"; 
+    import { loadProducts, populateCategoryFilter, populateColorFilter, toggleFavorite } from "./js/products.js"; 
+    import { addToCart, addToCartFromDetail, updateQuantity, removeItem, updateItemColor } from "./js/cart.js"; 
 
     window.addToCart = addToCart; 
     window.addToCartFromDetail = addToCartFromDetail;
@@ -92,6 +92,7 @@
     populateCategoryFilter();
     populateColorFilter();
 </script>
+
 
 
 
