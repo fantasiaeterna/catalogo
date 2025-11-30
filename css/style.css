@@ -672,3 +672,83 @@ a:hover {
     line-height: 1.5;
     margin: 10,0;
   }
+/* ==========================================================================
+   Estilos para Login/Cadastro (login.html)
+   ========================================================================== */
+
+.login-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    text-align: center;
+}
+
+.login-container h1 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.login-container label {
+    text-align: left;
+    font-weight: 600;
+    margin-bottom: -10px;
+}
+
+.login-container input[type="email"],
+.login-container input[type="password"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.login-container button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    transition: background-color 0.3s;
+}
+
+.login-container button[type="submit"] {
+    background-color: #5cb85c; /* Verde para Entrar */
+    color: white;
+}
+
+.login-container button[type="submit"]:hover {
+    background-color: #4cae4c;
+}
+
+#toggle-auth-mode {
+    background-color: #007bff; /* Azul para Cadastrar */
+    color: white;
+}
+
+#toggle-auth-mode:hover {
+    background-color: #0056b3;
+}
+
+.login-container #forgot-password-link {
+    display: block;
+    margin-top: 5px;
+    color: #007bff;
+    text-decoration: none;
+    font-size: 0.9em;
+}
+
+.login-container #forgot-password-link:hover {
+    text-decoration: underline;
+}
+
