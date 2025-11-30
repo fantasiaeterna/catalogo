@@ -180,6 +180,11 @@ export async function loadProducts() {
             const isFavorited = userFavorites.includes(p.id);
             const favoriteClass = isFavorited ? 'favorited' : '';
             const favoriteIcon = isFavorited ? 'fas fa-heart' : 'far fa-heart';
+
+            const hasColors = p.cores && p.cores.length > 0;
+            const buttonHtml = hasColors 
+                ? `<a href="product.html?id=${p.id}" class="btn btn-primary" style="width: 100%; display: block; box-sizing: border-box;">Ver Detalhes</a>`
+                : `<button onclick="handleAddToCart('${p.id}', '${p.nome}', ${p.preco}, ${p.tipo === 'encomenda'}, false)">Adicionar ao Carrinho</button>`;
             
             html += `
                 <div class="produto">
@@ -190,7 +195,7 @@ export async function loadProducts() {
                         <h3>${p.nome}</h3>
                     </a>
                     <p class="price">R$ ${p.preco.toFixed(2)}</p>
-                    <button onclick="handleAddToCart('${p.id}', '${p.nome}', ${p.preco}, ${p.tipo === 'encomenda'}, ${p.cores && p.cores.length > 0})">Adicionar ao Carrinho</button>
+                    ${buttonHtml}
                     <button onclick="toggleFavorite('${p.id}')" class="favorite-btn ${favoriteClass}"><i class="${favoriteIcon}"></i></button>
                 </div>
             `;
@@ -204,15 +209,15 @@ export async function loadProducts() {
     }
 }
 
-// Função para lidar com adição ao carrinho (verifica se tem cores)
+// A função handleAddToCart não é mais necessária, pois a lógica foi movida para loadProducts.
+// Apenas a função window.addToCart será chamada diretamente para produtos sem cores.
+// Mantendo a função para evitar erros, mas simplificando-a.
 export async function handleAddToCart(productId, name, price, isEncomenda, hasColors) {
-    if (hasColors) {
-        alert("Este produto tem cores. Por favor, selecione uma cor na página de detalhes.");
-        window.location.href = `product.html?id=${productId}`;
-    } else {
-        window.addToCart(productId, name, price, isEncomenda);
-    }
+    // Esta função só será chamada para produtos SEM cores (hasColors será 'false')
+    // Produtos com cores agora usam um link direto para a página de detalhes.
+    window.addToCart(productId, name, price, isEncomenda);
 }
+
 
 // Implementação da função toggleFavorite
 export async function toggleFavorite(productId) {
@@ -280,12 +285,13 @@ export async function loadProductDetails(productId) {
 
         const p = docSnap.data();
         
-        await fetchUserFavorites();
+                await fetchUserFavorites();
         const isFavorited = userFavorites.includes(productId);
         const favoriteClass = isFavorited ? 'favorited' : '';
         const favoriteIcon = isFavorited ? 'fas fa-heart' : 'far fa-heart';
         
-        const imagesHtml = p.imagens.map((imgUrl, index) => 
+        const images = p.imagens || [];
+        const imagesHtml = images.map((imgUrl, index) => 
             `<img src="${imgUrl}" alt="Imagem ${index + 1}" onclick="changeMainImage('${imgUrl}')" class="${index === 0 ? 'active-thumb' : ''}">`
         ).join('');
         
@@ -301,11 +307,21 @@ export async function loadProductDetails(productId) {
             </div>
         ` : '';
 
+        const isEncomenda = p.tipo === 'encomenda';
+        
         // Campo de observações com tamanho aumentado
+        const observationLabel = isEncomenda 
+            ? 'Observações (Obrigatório para Sob Encomenda): <span style="color: red;">*</span>' 
+            : 'Observações:';
+        const observationPlaceholder = isEncomenda 
+            ? 'coloque aqui suas medidas' 
+            : 'Digite suas observações aqui...';
+        const observationRequired = isEncomenda ? 'required' : '';
+        
         const observationField = `
             <div class="filter-group">
-                <label for="obs-${productId}">Observações:</label>
-                <textarea id="obs-${productId}" placeholder="Digite suas observações aqui..." style="min-height: 120px; resize: vertical;"></textarea>
+                <label for="obs-${productId}">${observationLabel}</label>
+                <textarea id="obs-${productId}" placeholder="${observationPlaceholder}" ${observationRequired} style="min-height: 120px; resize: vertical;"></textarea>
             </div>
         `;
 
@@ -313,7 +329,7 @@ export async function loadProductDetails(productId) {
         container.innerHTML = `
             <div class="product-detail-layout">
                 <div class="product-gallery">
-                    <img id="main-product-image" src="${p.imagens[0]}" alt="${p.nome}">
+                    <img id="main-product-image" src="${images.length > 0 ? images[0] : 'placeholder.png'}" alt="${p.nome}">
                     <div class="thumbnails-details">
                         ${imagesHtml}
                     </div>
@@ -339,6 +355,7 @@ export async function loadProductDetails(productId) {
                 </div>
             </div>
         `;
+
         
         // Função auxiliar para trocar a imagem principal
         window.changeMainImage = (imgUrl) => {
@@ -361,3 +378,4 @@ onAuthStateChanged(auth, (user) => {
         populateColorFilter();
     }
 });
+
