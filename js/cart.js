@@ -58,8 +58,8 @@ export async function addToCart(id, name, price, isEncomenda = false) {
 }
 
     
-    // Se for encomenda ou novo item simples
-    cart.push({ id, name, price, quantity: 1, isEncomenda, color: '', observation: '', imageUrl: '' });
+        // Se for encomenda ou novo item simples
+    cart.push({ id, name, price, quantity: 1, isEncomenda, color: '', observation: '', imageUrl: imageUrl });
     saveCart(cart);
     alert(`${name} adicionado ao carrinho!`);
     
@@ -87,7 +87,15 @@ export async function addToCartFromDetail(productId, name, price, isEncomenda) {
                     return;
                 }
             }
-            
+
+                        // Se for sob encomenda, obriga o preenchimento da observação
+            if (product.tipo === 'encomenda') {
+                if (!observation || !observation.value.trim()) {
+                    alert("Este produto é sob encomenda. Por favor, preencha o campo de observações com suas medidas.");
+                    return;
+                }
+            }
+
             // Pega a imagem do produto
             const imageUrl = product.imagens && product.imagens.length > 0 ? product.imagens[0] : '';
             
@@ -322,5 +330,6 @@ export async function saveOrder() {
         return false;
     }
 }
+
 
 
