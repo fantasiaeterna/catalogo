@@ -219,7 +219,7 @@ a:hover {
     margin-bottom: 15px;
 }
 
-.produto button {
+.produto button, .produto .btn {
     /* Botão Primário */
     background-color: var(--primary-color);
     color: white;
@@ -234,7 +234,7 @@ a:hover {
     height: 44px; 
 }
 
-.produto button:hover {
+.produto button:hover, .produto .btn:hover {
     background-color: #8C14D1; 
 }
 
@@ -540,7 +540,7 @@ a:hover {
     margin-left: auto;
 }
 
-#favorite-product-grid .produto button {
+#favorite-product-grid .produto button, .produto .btn {
     width: auto;
     height: auto;
     padding: 5px 10px;
@@ -672,6 +672,7 @@ a:hover {
     line-height: 1.5;
     margin: 10,0;
   }
+
 /* ==========================================================================
    Estilos para Login/Cadastro (login.html)
    ========================================================================== */
@@ -731,24 +732,22 @@ a:hover {
     background-color: #4cae4c;
 }
 
-#toggle-auth-mode {
+#register-button {
     background-color: #007bff; /* Azul para Cadastrar */
     color: white;
 }
 
-#toggle-auth-mode:hover {
+#register-button:hover {
     background-color: #0056b3;
 }
 
-.login-container #forgot-password-link {
+.login-container .link-voltar {
     display: block;
-    margin-top: 5px;
+    margin-top: 15px;
     color: #007bff;
     text-decoration: none;
-    font-size: 0.9em;
 }
 
-.login-container #forgot-password-link:hover {
+.login-container .link-voltar:hover {
     text-decoration: underline;
 }
-
