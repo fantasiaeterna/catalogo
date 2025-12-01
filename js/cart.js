@@ -117,6 +117,12 @@ export async function addToCartFromDetail(productId, name, price, isEncomenda) {
         console.error("Erro ao buscar produto:", err);
     }
 }
+// --- Tornar funções acessíveis ao HTML inline (pages usam onclick)
+window.addToCart = addToCart;                   // usado na listagem (produtos sem cor)
+window.addToCartFromDetail = addToCartFromDetail; // usado no product.html (detalhes)
+window.getCart = getCart;
+window.saveCart = saveCart;
+	
 
 // Função para obter o total do carrinho
 export function getCartTotal() {
@@ -319,6 +325,7 @@ export async function saveOrder() {
         return false;
     }
 }
+
 
 
 
