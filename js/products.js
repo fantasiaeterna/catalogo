@@ -179,22 +179,22 @@ export async function loadProducts() {
             
             const isFavorited = userFavorites.includes(p.id);
             const favoriteClass = isFavorited ? 'favorited' : '';
- 	            const favoriteIcon = isFavorited ? 'far fa-heart';
+ 	            const favoriteIcon = isFavorited ? 'fas fa-heart' : 'far fa-heart';
 	            
 	            const hasColors = p.cores && p.cores.length > 0;
-	            const buttonHtml = hasColors 
-	                ? `<a href="product.html?id=${p.id}" class="btn btn-primary" style="width: 100%; display: block; box-sizing: border-box;">Ver Detalhes</a>`
-	                : `<button onclick="handleAddToCart('${p.id}', '${p.nome}', ${p.preco}, ${p.tipo === 'encomenda'}, false)">Adicionar ao Carrinho</button>`;
-	            
-	            html += `
-	                <div class="produto">
-	                    <a href="product.html?id=${p.id}">
-	                        <img src="${imageUrl}" alt="${p.nome}">
-	                    </a>
-	                    <a href="product.html?id=${p.id}">
-	                        <h3>${p.nome}</h3>
-	                    </a>
-	                    <p class="price">R$ ${p.preco.toFixed(2)}</p>
+		            const buttonHtml = hasColors 
+		                ? `<a href="product.html?id=${p.id}" class="btn btn-primary" style="width: 100%; display: block; box-sizing: border-box;">Ver Detalhes</a>`
+		                : `<button onclick="handleAddToCart('${p.id}', '${p.nome}', ${parseFloat(p.preco || 0)}, ${p.tipo === 'encomenda'}, false)">Adicionar ao Carrinho</button>`;
+		            
+		            html += `
+		                <div class="produto">
+		                    <a href="product.html?id=${p.id}">
+		                        <img src="${imageUrl}" alt="${p.nome}">
+		                    </a>
+		                    <a href="product.html?id=${p.id}">
+		                        <h3>${p.nome}</h3>
+		                    </a>
+		                    <p class="price">R$ ${parseFloat(p.preco || 0).toFixed(2)}</p>
 	                    ${buttonHtml}
 	                    <button onclick="toggleFavorite('${p.id}')" class="favorite-btn ${favoriteClass}"><i class="${favoriteIcon}"></i></button>
 	                </div>
@@ -296,65 +296,65 @@ export async function loadProductDetails(productId) {
         ).join('');
         
         // Geração dos campos de seleção de cores
-        const colorOptions = p.cores ? p.cores.map(color => `<option value="${color}">${color}</option>`).join('') : '';
-        const colorSelect = p.cores && p.cores.length > 0 ? `
-            <div class="filter-group">
-                <label for="select-cores">Cor: <span style="color: red;">*</span></label>
-                <select id="select-cores" required>
-                    <option value="">Selecione uma cor</option>
-                    ${colorOptions}
-                </select>
-            </div>
-        ` : '';
-
-	        const isEncomenda = p.tipo === 'encomenda';
-	        
-	        // Campo de observações com tamanho aumentado
-	        const observationLabel = isEncomenda 
-	            ? 'Observações (Obrigatório para Sob Encomenda): <span style="color: red;">*</span>' 
-	            : 'Observações:';
-	        const observationPlaceholder = isEncomenda 
-	            ? 'coloque aqui suas medidas' 
-	            : 'Digite suas observações aqui...';
-	        const observationRequired = isEncomenda ? 'required' : '';
-	        
-	        const observationField = `
+	        const colorOptions = p.cores ? p.cores.map(color => `<option value="${color}">${color}</option>`).join('') : '';
+	        const colorSelect = p.cores && p.cores.length > 0 ? `
 	            <div class="filter-group">
-	                <label for="obs-${productId}">${observationLabel}</label>
-	                <textarea id="obs-${productId}" placeholder="${observationPlaceholder}" ${observationRequired} style="min-height: 120px; resize: vertical;"></textarea>
+	                <label for="select-cores">Cor: ${p.cores.length > 0 ? '<span style="color: red;">*</span>' : ''}</label>
+	                <select id="select-cores" ${p.cores.length > 0 ? 'required' : ''}>
+	                    <option value="">Selecione uma cor</option>
+	                    ${colorOptions}
+	                </select>
+	            </div>
+	        ` : '';
+
+		        const isEncomenda = p.tipo === 'Sob encomenda'; // Corrigido para 'Sob encomenda'
+		        
+		        // Campo de observações com as regras de preenchimento
+		        const observationLabel = isEncomenda 
+		            ? 'Observações (Obrigatório para Sob Encomenda): <span style="color: red;">*</span>' 
+		            : 'Observações:';
+		        const observationPlaceholder = isEncomenda 
+		            ? 'coloque aqui suas medidas' 
+		            : 'Digite suas observações aqui...';
+		        const observationRequired = isEncomenda ? 'required' : '';
+		        
+		        const observationField = `
+		            <div class="filter-group">
+		                <label for="obs-${productId}">${observationLabel}</label>
+		                <textarea id="obs-${productId}" placeholder="${observationPlaceholder}" ${observationRequired} style="min-height: 120px; resize: vertical;"></textarea>
+		            </div>
+		        `;
+
+	        // HTML para a página de detalhes (product.html)
+	        container.innerHTML = `
+		            <div class="product-detail-layout">
+		                <div class="product-gallery">
+		                    <img id="main-product-image" src="${images.length > 0 ? images[0] : 'placeholder.png'}" alt="${p.nome}">
+	                    <div class="thumbnails-details">
+	                        ${imagesHtml}
+	                    </div>
+	                </div>
+	                <div class="product-info">
+	                    <h1>${p.nome}</h1>
+	                    <p class="category">Categoria: ${p.categoria}</p>
+	                    <p class="price">R$ ${parseFloat(p.preco || 0).toFixed(2)}</p>
+	                    <p>${p.descricao}</p>
+	                    
+	                    ${colorSelect}
+	                    ${observationField}
+	                    
+	                    ${isEncomenda ? `
+	                        <div class="custom-order-fields">
+	                            <h3>Detalhes da Encomenda</h3>
+	                            <p class="small-text">Lembre-se: Encomendas requerem 50% de pagamento antecipado.</p>
+	                        </div>
+	                    ` : ''}
+
+	                    <button onclick="addToCartFromDetail('${productId}', '${p.nome}', ${parseFloat(p.preco || 0)}, ${isEncomenda})">Adicionar ao Carrinho</button>
+	                    <button onclick="toggleFavorite('${productId}')" class="favorite-btn ${favoriteClass}"><i class="${favoriteIcon}"></i></button>
+	                </div>
 	            </div>
 	        `;
-
-        // HTML para a página de detalhes (product.html)
-        container.innerHTML = `
-	            <div class="product-detail-layout">
-	                <div class="product-gallery">
-	                    <img id="main-product-image" src="${images.length > 0 ? images[0] : 'placeholder.png'}" alt="${p.nome}">
-                    <div class="thumbnails-details">
-                        ${imagesHtml}
-                    </div>
-                </div>
-                <div class="product-info">
-                    <h1>${p.nome}</h1>
-                    <p class="category">Categoria: ${p.categoria}</p>
-                    <p class="price">R$ ${p.preco.toFixed(2)}</p>
-                    <p>${p.descricao}</p>
-                    
-                    ${colorSelect}
-                    ${observationField}
-                    
-                    ${p.tipo === 'encomenda' ? `
-                        <div class="custom-order-fields">
-                            <h3>Detalhes da Encomenda</h3>
-                            <p class="small-text">Lembre-se: Encomendas requerem 50% de pagamento antecipado.</p>
-                        </div>
-                    ` : ''}
-
-                    <button onclick="addToCartFromDetail('${productId}', '${p.nome}', ${p.preco}, ${p.tipo === 'encomenda'})">Adicionar ao Carrinho</button>
-                    <button onclick="toggleFavorite('${productId}')" class="favorite-btn ${favoriteClass}"><i class="${favoriteIcon}"></i></button>
-                </div>
-            </div>
-        `;
         
 
 
