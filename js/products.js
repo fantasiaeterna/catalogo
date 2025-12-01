@@ -184,7 +184,7 @@ export async function loadProducts() {
 	            const hasColors = p.cores && p.cores.length > 0;
 		            const buttonHtml = hasColors 
 		                ? `<a href="product.html?id=${p.id}" class="btn btn-primary" style="width: 100%; display: block; box-sizing: border-box;">Ver Detalhes</a>`
-		                : `<button onclick="handleAddToCart('${p.id}', '${p.nome}', ${parseFloat(p.preco || 0)}, ${p.tipo === 'encomenda'}, false)">Adicionar ao Carrinho</button>`;
+			                : `<button onclick="handleAddToCart('${p.id}', '${p.nome}', ${parseFloat(p.preco || 0)}, ${p.tipo === 'Sob encomenda'}, false)">Adicionar ao Carrinho</button>`;
 		            
 		            html += `
 		                <div class="produto">
