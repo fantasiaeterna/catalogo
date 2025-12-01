@@ -29,43 +29,32 @@ export async function addToCart(id, name, price, isEncomenda = false) {
     } catch (err) {
         console.error("Erro ao buscar imagem do produto:", err);
     }
-    
-    // Na página inicial, tentamos agrupar itens idênticos (sem opções extras)
-    if (!isEncomenda) {
-        const existingItem = cart.find(item => 
-            item.id === id && !item.isEncomenda && !item.color && !item.observation
-        );
-        
-        if (existingItem) {
-            existingItem.quantity += 1;
-            saveCart(cart);
-            alert(`${name} adicionado ao carrinho!`);
-            if (document.getElementById('cart-items')) {
-                loadCart();
-            }
-            return;
-        }
-    }
-    
-    // Se for encomenda ou novo item simples
-    cart.push({ id, name, price, quantity: 1, isEncomenda, color: '', observation: '', imageUrl: imageUrl });
-    saveCart(cart);
-    alert(`${name} adicionado ao carrinho!`);
-    
-    if (document.getElementById('cart-items')) {
-        loadCart();
-    }
-}
-
-    
-        // Se for encomenda ou novo item simples
-    cart.push({ id, name, price, quantity: 1, isEncomenda, color: '', observation: '', imageUrl: imageUrl });
-    saveCart(cart);
-    alert(`${name} adicionado ao carrinho!`);
-    
-    if (document.getElementById('cart-items')) {
-        loadCart();
-    }
+	    
+	    // Na página inicial, tentamos agrupar itens idênticos (sem opções extras)
+	    if (!isEncomenda) {
+	        const existingItem = cart.find(item => 
+	            item.id === id && !item.isEncomenda && !item.color && !item.observation
+	        );
+	        
+	        if (existingItem) {
+	            existingItem.quantity += 1;
+	            saveCart(cart);
+	            alert(`${name} adicionado ao carrinho!`);
+	            if (document.getElementById('cart-items')) {
+	                loadCart();
+	            }
+	            return;
+	        }
+	    }
+	
+	    // Se for encomenda ou novo item simples
+	    cart.push({ id, name, price, quantity: 1, isEncomenda, color: '', observation: '', imageUrl: imageUrl });
+	    saveCart(cart);
+	    alert(`${name} adicionado ao carrinho!`);
+	    
+	    if (document.getElementById('cart-items')) {
+	        loadCart();
+	    }
 
 // Função para adicionar item ao carrinho (página de detalhes - com validação de cores)
 export async function addToCartFromDetail(productId, name, price, isEncomenda) {
