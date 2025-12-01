@@ -250,6 +250,11 @@ export function displayCheckout() {
 
     const itemsContainer = document.getElementById("checkout-cart-items");
     const detailsDiv = document.getElementById("payment-details");
+    
+// Após salvar o pedido
+const orderId = await saveOrder(); // Isso retorna o ID do pedido
+if (orderId) {
+    window.location.href = `confirmation.html?orderId=${orderId}`;
 
     if (!itemsContainer || !detailsDiv) return;
 
@@ -274,12 +279,6 @@ export function displayCheckout() {
         <p>Valor Mínimo para Encomendas (50%): <strong>R$ ${halfTotal.toFixed(2)}</strong></p>
     `;
 }
-// Após salvar o pedido
-const orderId = await saveOrder(); // Isso retorna o ID do pedido
-if (orderId) {
-    window.location.href = `confirmation.html?orderId=${orderId}`;
-}
-
 
 // Função para salvar o pedido no Firestore
 export async function saveOrder() {
@@ -318,3 +317,4 @@ export async function saveOrder() {
         return false;
     }
 }
+
