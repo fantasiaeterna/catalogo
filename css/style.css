@@ -234,7 +234,7 @@ a:hover {
     height: 44px; 
 }
 
-.produto button:hover, .produto .btn:hover {
+.produto button:hover {
     background-color: #8C14D1; 
 }
 
@@ -752,3 +752,10 @@ a:hover {
     text-decoration: underline;
 }
 
+
+/* Remove o hover do link que simula botão */
+.produto .btn:hover {
+    transform: none;
+    box-shadow: none;
+    background-color: var(--primary-color); /* Mantém a cor de fundo */
+}
