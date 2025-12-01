@@ -56,13 +56,19 @@
         loadProductDetails(productId);
     }
     
-    // Função auxiliar para trocar a imagem principal (também precisa ser global)
-    window.changeMainImage = (imgUrl) => {
-        document.getElementById('main-product-image').src = imgUrl;
-        document.querySelectorAll('.thumbnails-details img').forEach(img => img.classList.remove('active-thumb'));
-        document.querySelector(`.thumbnails-details img[src="${imgUrl}"]`).classList.add('active-thumb');
-    };
-</script>
+	    // Função auxiliar para trocar a imagem principal (também precisa ser global)
+	    window.changeMainImage = (imgUrl) => {
+	        const mainImage = document.getElementById('main-product-image');
+	        if (mainImage) {
+	            mainImage.src = imgUrl;
+	        }
+	        document.querySelectorAll('.thumbnails-details img').forEach(img => img.classList.remove('active-thumb'));
+	        const activeThumb = document.querySelector(`.thumbnails-details img[src="${imgUrl}"]`);
+	        if (activeThumb) {
+	            activeThumb.classList.add('active-thumb');
+	        }
+	    };
+	</script>
 
 
     <!-- POP-UP DE BOAS-VINDAS -->
