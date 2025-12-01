@@ -251,11 +251,6 @@ export function displayCheckout() {
     const itemsContainer = document.getElementById("checkout-cart-items");
     const detailsDiv = document.getElementById("payment-details");
     
-// Após salvar o pedido
-const orderId = await saveOrder(); // Isso retorna o ID do pedido
-if (orderId) {
-    window.location.href = `confirmation.html?orderId=${orderId}`;
-
     if (!itemsContainer || !detailsDiv) return;
 
     if (cart.length > 0) {
@@ -317,4 +312,5 @@ export async function saveOrder() {
         return false;
     }
 }
+
 
