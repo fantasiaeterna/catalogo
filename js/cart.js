@@ -78,7 +78,7 @@ export async function addToCartFromDetail(productId, name, price, isEncomenda) {
             }
 
 	            // Se for sob encomenda, obriga o preenchimento da observação
-	            if (product.tipo === 'Sob encomenda') {
+		            if (product.tipo === 'Sob encomenda') {
 	                if (!observation || !observation.value.trim()) {
 	                    alert("Este produto é sob encomenda. Por favor, preencha o campo de observações com suas medidas.");
 	                    return;
