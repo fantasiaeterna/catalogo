@@ -41,11 +41,9 @@ toggleButton.addEventListener("click", () => {
     // Atualiza o texto do botão de alternância
     toggleButton.textContent = isLoginMode ? "Cadastrar" : "Voltar para Login";
     
-	    // Exibe/Esconde a dica de senha e a confirmação de senha
-	    // A dica de senha agora é controlada apenas pelo CSS/HTML, mas mantemos a lógica de confirmação
-	    // passwordHint.style.display = isLoginMode ? "none" : "block"; // Removido o controle de display aqui
-	    confirmPasswordGroup.style.display = isLoginMode ? "none" : "block";
-    confirmPasswordGroup.style.display = isLoginMode ? "none" : "block";
+		    // Exibe/Esconde a dica de senha e a confirmação de senha
+		    passwordHint.style.display = isLoginMode ? "none" : "block";
+		    confirmPasswordGroup.style.display = isLoginMode ? "none" : "block";
     
     // Exibe/Esconde o link de esqueci a senha
     forgotPasswordLink.style.display = isLoginMode ? "block" : "none";
