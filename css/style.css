@@ -543,8 +543,8 @@ a:hover {
 #favorite-product-grid .produto button, .produto .btn {
     width: auto;
     height: auto;
-    padding: 5px 10px;
-    margin-left: 10px;
+    padding: 10px 15px;
+    margin-left: 5px;
     font-size: 0.8em;
 }
 
@@ -751,3 +751,4 @@ a:hover {
 .login-container .link-voltar:hover {
     text-decoration: underline;
 }
+
