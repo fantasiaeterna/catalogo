@@ -29,32 +29,33 @@ export async function addToCart(id, name, price, isEncomenda = false) {
     } catch (err) {
         console.error("Erro ao buscar imagem do produto:", err);
     }
-	    
-	    // Na página inicial, tentamos agrupar itens idênticos (sem opções extras)
-	    if (!isEncomenda) {
-	        const existingItem = cart.find(item => 
-	            item.id === id && !item.isEncomenda && !item.color && !item.observation
-	        );
-	        
-	        if (existingItem) {
-	            existingItem.quantity += 1;
-	            saveCart(cart);
-	            alert(`${name} adicionado ao carrinho!`);
-	            if (document.getElementById('cart-items')) {
-	                loadCart();
-	            }
-	            return;
-	        }
-	    }
-	
-	    // Se for encomenda ou novo item simples
-	    cart.push({ id, name, price, quantity: 1, isEncomenda, color: '', observation: '', imageUrl: imageUrl });
-	    saveCart(cart);
-	    alert(`${name} adicionado ao carrinho!`);
-	    
-	    if (document.getElementById('cart-items')) {
-	        loadCart();
-	    }
+    
+    // Na página inicial, tentamos agrupar itens idênticos (sem opções extras)
+    if (!isEncomenda) {
+        const existingItem = cart.find(item => 
+            item.id === id && !item.isEncomenda && !item.color && !item.observation
+        );
+        
+        if (existingItem) {
+            existingItem.quantity += 1;
+            saveCart(cart);
+            alert(`${name} adicionado ao carrinho!`);
+            if (document.getElementById('cart-items')) {
+                loadCart();
+            }
+            return;
+        }
+    }
+    
+    // Se for encomenda ou novo item simples
+    cart.push({ id, name, price, quantity: 1, isEncomenda, color: '', observation: '', imageUrl: imageUrl });
+    saveCart(cart);
+    alert(`${name} adicionado ao carrinho!`);
+    
+    if (document.getElementById('cart-items')) {
+        loadCart();
+    }
+}
 
 // Função para adicionar item ao carrinho (página de detalhes - com validação de cores)
 export async function addToCartFromDetail(productId, name, price, isEncomenda) {
@@ -76,15 +77,7 @@ export async function addToCartFromDetail(productId, name, price, isEncomenda) {
                     return;
                 }
             }
-
-	            // Se for sob encomenda, obriga o preenchimento da observação
-		            if (product.tipo === 'Sob encomenda') {
-	                if (!observation || !observation.value.trim()) {
-	                    alert("Este produto é sob encomenda. Por favor, preencha o campo de observações com suas medidas.");
-	                    return;
-	                }
-	            }
-
+            
             // Pega a imagem do produto
             const imageUrl = product.imagens && product.imagens.length > 0 ? product.imagens[0] : '';
             
@@ -103,7 +96,7 @@ export async function addToCartFromDetail(productId, name, price, isEncomenda) {
                 color, 
                 observation: obs,
                 imageUrl: imageUrl,
-                availableColors: product.cores || [] // Salva as cores disponíveis
+                availableColors: product.cores || []
             });
 
             saveCart(cart);
@@ -117,12 +110,6 @@ export async function addToCartFromDetail(productId, name, price, isEncomenda) {
         console.error("Erro ao buscar produto:", err);
     }
 }
-// --- Tornar funções acessíveis ao HTML inline (pages usam onclick)
-window.addToCart = addToCart;                   // usado na listagem (produtos sem cor)
-window.addToCartFromDetail = addToCartFromDetail; // usado no product.html (detalhes)
-window.getCart = getCart;
-window.saveCart = saveCart;
-	
 
 // Função para obter o total do carrinho
 export function getCartTotal() {
@@ -224,7 +211,7 @@ export function loadCart() {
             `;
         }
         
-               html += `
+        html += `
             <li class="cart-item ${isEncomendaClass}">
                 <a href="product.html?id=${item.id}" style="text-decoration: none; color: inherit; cursor: pointer;">
                     <img src="${item.imageUrl || 'placeholder.png'}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: cover;">
