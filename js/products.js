@@ -297,17 +297,17 @@ export async function loadProductDetails(productId) {
         
         // Geração dos campos de seleção de cores
 	        const colorOptions = p.cores ? p.cores.map(color => `<option value="${color}">${color}</option>`).join('') : '';
-	        const colorSelect = p.cores && p.cores.length > 0 ? `
-	            <div class="filter-group">
-	                <label for="select-cores">Cor: ${p.cores.length > 0 ? '<span style="color: red;">*</span>' : ''}</label>
-	                <select id="select-cores" ${p.cores.length > 0 ? 'required' : ''}>
-	                    <option value="">Selecione uma cor</option>
-	                    ${colorOptions}
-	                </select>
-	            </div>
-	        ` : '';
+		        const colorSelect = p.cores && p.cores.length > 0 ? `
+		            <div class="filter-group">
+		                <label for="select-cores">Cor: <span style="color: red;">*</span></label>
+		                <select id="select-cores" required>
+		                    <option value="">Selecione uma cor</option>
+		                    ${colorOptions}
+		                </select>
+		            </div>
+		        ` : '';
 
-		        const isEncomenda = p.tipo === 'Sob encomenda'; // Corrigido para 'Sob encomenda'
+			        const isEncomenda = p.tipo === 'Sob encomenda';
 		        
 		        // Campo de observações com as regras de preenchimento
 		        const observationLabel = isEncomenda 
@@ -350,7 +350,7 @@ export async function loadProductDetails(productId) {
 	                        </div>
 	                    ` : ''}
 
-	                    <button onclick="addToCartFromDetail('${productId}', '${p.nome}', ${parseFloat(p.preco || 0)}, ${isEncomenda})">Adicionar ao Carrinho</button>
+		                    <button onclick="addToCartFromDetail('${productId}', '${p.nome}', ${parseFloat(p.preco || 0)}, ${isEncomenda})">Adicionar ao Carrinho</button>
 	                    <button onclick="toggleFavorite('${productId}')" class="favorite-btn ${favoriteClass}"><i class="${favoriteIcon}"></i></button>
 	                </div>
 	            </div>
