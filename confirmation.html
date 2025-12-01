@@ -44,29 +44,32 @@
     </div>
 
     <script>
-        function generateOrderNumber() {
-            return Math.floor(Math.random() * 90000) + 10000;
-        }
+    // Pega o ID do pedido da URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get('orderId');
+    
+    // Se não tiver orderId na URL, usa um padrão
+    const orderNumber = orderId ? orderId.substring(0, 5).toUpperCase() : 'XXXXX';
+    
+    const messageContainer = document.getElementById('confirmation-message');
+    const copyButton = document.getElementById('copy-button');
 
-        const orderNumber = generateOrderNumber();
-        const messageContainer = document.getElementById('confirmation-message');
-        const copyButton = document.getElementById('copy-button');
+    messageContainer.innerHTML = `
+        <h4>Copie a mensagem abaixo, edite-a com o seu endereço no local indicado e envie-a na nossa DM do Instagram. Depois disso, é só esperar o nosso contato!</h4>
+        <p><strong>Fique atento!</strong> Tenha certeza de ter lido e entendido nossas regras e detalhes de venda. Clicando no botão abaixo, você confirma estar ciente de todo nosso processo e ter aceito esses termos <3 </p>
+        <hr>
+        <p><strong>Mensagem para Envio:</strong></p>
+        <textarea id="message-to-copy" rows="5" cols="50" readonly>Oi! Meu pedido é o ${orderNumber}. O endereço de envio é [Insira aqui o seu endereço] Gostaria de combinar os detalhes da entrega!</textarea>
+    `;
 
-        messageContainer.innerHTML = `
-            <h4>Copie a mensagem abaixo, edite-a com o seu endereço no local indicado e envie-a na nossa DM do Instagram. Depois disso, é só esperar o nosso contato!</h4>
-            <p><strong>Fique atento!</strong> Tenha certeza de ter lido e entendido nossas regras e detalhes de venda. Clicando no botão abaixo, você confirma estar ciente de todo nosso processo e ter aceito esses termos <3 </p>
-            <hr>
-            <p><strong>Mensagem para Envio:</strong></p>
-            <textarea id="message-to-copy" rows="5" cols="50" readonly>Oi! Meu pedido é o ${orderNumber}. O endereço de envio é [Insira aqui o seu endereço] Gostaria de combinar os detalhes da entrega!</textarea>
-        `;
+    copyButton.addEventListener('click', () => {
+        const messageTextarea = document.getElementById('message-to-copy');
+        messageTextarea.select();
+        document.execCommand('copy');
+        alert('Mensagem copiada para a área de transferência!');
+    });
+</script>
 
-        copyButton.addEventListener('click', () => {
-            const messageTextarea = document.getElementById('message-to-copy');
-            messageTextarea.select();
-            document.execCommand('copy');
-            alert('Mensagem copiada para a área de transferência!');
-        });
-    </script>
 
     <!-- POP-UP DE BOAS-VINDAS -->
 <div id="welcome-popup" class="popup-overlay">
@@ -128,3 +131,4 @@
 
 </body>
 </html>
+
