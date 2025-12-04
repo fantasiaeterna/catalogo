@@ -311,10 +311,10 @@ export async function loadProductDetails(productId) {
 		        
 		        // Campo de observações com as regras de preenchimento
 		        const observationLabel = isEncomenda 
-		            ? 'Observações (Obrigatório para Sob Encomenda): <span style="color: red;">*</span>' 
+		            ? 'Observações (Obrigatório): <span style="color: red;">*</span>' 
 		            : 'Observações:';
 		        const observationPlaceholder = isEncomenda 
-		            ? 'coloque aqui suas medidas' 
+		            ? 'Escreva suas medidas. (Ex: busto, cintura, torax)' 
 		            : 'Digite suas observações aqui...';
 		        const observationRequired = isEncomenda ? 'required' : '';
 		        
@@ -345,7 +345,6 @@ export async function loadProductDetails(productId) {
 	                    
 	                    ${isEncomenda ? `
 	                        <div class="custom-order-fields">
-	                            <h3>Detalhes da Encomenda</h3>
 	                            <p class="small-text">Lembre-se: Encomendas requerem 50% de pagamento antecipado.</p>
 	                        </div>
 	                    ` : ''}
@@ -372,3 +371,4 @@ onAuthStateChanged(auth, (user) => {
         populateColorFilter();
     }
 });
+
