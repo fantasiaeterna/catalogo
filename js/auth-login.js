@@ -118,7 +118,7 @@ forgotPasswordLink.addEventListener("click", (e) => {
     sendPasswordResetEmail(auth, email)
         .then(() => {
             message.style.color = "green";
-            message.textContent = `Um link de redefinição de senha foi enviado para ${email}. Verifique sua caixa de entrada.`;
+            message.textContent = `Um link de redefinição de senha foi enviado para ${email}. Verifique sua caixa de entrada e spam.`;
         })
         .catch((err) => {
             message.style.color = "red";
