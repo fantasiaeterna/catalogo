@@ -307,7 +307,7 @@ export async function saveOrder() {
         
         // Redireciona para a página de confirmação com o ID do pedido
         const orderId = docRef.id;
-        window.location.href = `confirmation.html?orderId=${docRef.id}`;
+        window.location.href = `confirmation.html?orderId=${orderId}`;
         
         return orderId;
     } catch (error) {
@@ -316,3 +316,4 @@ export async function saveOrder() {
         return false;
     }
 }
+
