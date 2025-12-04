@@ -300,17 +300,19 @@ export async function saveOrder() {
             date: new Date().toISOString(),
             status: "Aguardando Pagamento"
         };
-
+        
         const docRef = await addDoc(collection(db, "pedidos"), orderData);
         
         saveCart([]); 
         
-        return docRef.id;
+        // Redireciona para a página de confirmação com o ID do pedido
+        const orderId = docRef.id;
+        window.location.href = `confirmation.html?orderId=${orderId}`;
+        
+        return orderId;
     } catch (error) {
         console.error("Erro ao salvar o pedido:", error);
         alert("Ocorreu um erro ao finalizar o pedido. Tente novamente.");
         return false;
     }
 }
-
-
