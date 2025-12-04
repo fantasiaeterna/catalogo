@@ -55,20 +55,31 @@ a:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 100%;
+    gap: 10px;
+    flex-wrap: nowrap;
+    overflow: hidden;
 }
 
 .logo {
     font-family: var(--font-title);
     font-size: 1.8em;
     font-weight: 700;
+    margin-top: 8px;
+    white-space: normal;      /* permite quebrar linha */
+  overflow: hidden;         /* evita estourar o card */
+  display: -webkit-box;     
+  -webkit-line-clamp: 2;    /* mantém no máximo 2 linhas */
+  -webkit-box-orient: vertical;
+  height: auto;             /* libera altura natural */
+  line-height: 1.2;         /* reduz o espaçamento entre linhas */
     color: var(--primary-color);
 }
 
 .header-icons {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
+    flex-shrink: 0;
 }
 
 .header-icons a {
@@ -544,7 +555,7 @@ a:hover {
     width: auto;
     height: auto;
     padding: 10px 15px;
-    margin-left: 5px;
+    margin-left: auto;
     font-size: 0.8em;
 }
 
@@ -758,4 +769,10 @@ a:hover {
     transform: none;
     box-shadow: none;
     background-color: var(--primary-color); /* Mantém a cor de fundo */
+}
+@media (max-width: 480px) {
+    .logo {
+        font-size: 1.4em;
+        max-width: 55vw;
+    }
 }
