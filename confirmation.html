@@ -49,7 +49,7 @@
     const orderId = urlParams.get('orderId');
     
     // Se não tiver orderId na URL, usa um padrão
-    const displayOrderId = orderId ? orderId.substring(0, 5).toUpperCase() : 'XXXXX';
+    const orderNumber = orderId ? orderId.substring(0, 5).toUpperCase() : 'XXXXX';
     
     const messageContainer = document.getElementById('confirmation-message');
     const copyButton = document.getElementById('copy-button');
@@ -126,4 +126,5 @@
 
 </body>
 </html>
+
 
