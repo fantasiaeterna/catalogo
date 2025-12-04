@@ -50,7 +50,10 @@
     
     // Se não tiver orderId na URL, usa um padrão
     const orderNumber = orderId ? orderId.substring(0, 5).toUpperCase() : 'XXXXX';
-    
+
+    console.log('Order ID da URL:', orderId); // Para debug
+    console.log('Order Number (primeiras 5 letras):', orderNumber); // Para debug
+        
     const messageContainer = document.getElementById('confirmation-message');
     const copyButton = document.getElementById('copy-button');
 
