@@ -48,7 +48,7 @@ db.collection("produtos").doc(productId).get().then(doc => {
         const obsContainer = document.getElementById("obs-container");
         obsContainer.style.display = "block";
         document.getElementById("observacao").required = true;
-        document.getElementById("observacao").placeholder = "Coloque aqui suas medidas";
+        document.getElementById("observacao").placeholder = "Escreva suas medidas. (Ex: busto, cintura, torax)";
     }
 
     // botão adicionar ao carrinho
@@ -73,7 +73,7 @@ function adicionarAoCarrinho(produto, productId) {
     if (produto.tipo === "Sob encomenda") {
         const obs = document.getElementById("observacao").value.trim();
         if (!obs) {
-            alert("Coloque aqui suas medidas.");
+            alert("Escreva suas medidas. (Ex: busto, cintura, torax)");
             return;
         }
         produto.observacao = obs;
