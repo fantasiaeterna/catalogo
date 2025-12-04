@@ -1,0 +1,778 @@
+/* css/style.css - Versão Final (Com Paleta Visual e Correções de Layout) */
+
+:root {
+    /* Paleta do Plano Visual */
+    --primary-color: #A020F0; /* Roxo Fantasia */
+    --secondary-color: #dbc1eb; /* Roxo Claro */
+    --accent-color: #FFD700; /* Dourado */
+    --background-color: #FAF7FF; /* Quase branco com toque lilás */
+    --card-background: #FFFFFF;
+    --text-color: #1A1A1A; /* Preto Suave */
+    --text-secondary: #555;
+    --font-family: 'Poppins', sans-serif;
+    --border-radius: 8px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    margin: 0;
+    padding-top: 80px; 
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+a:hover {
+    color: #8C14D1; 
+}
+
+/* --- CABEÇALHO FIXO --- */
+#main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px; 
+    background-color: var(--card-background);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid #EEE; 
+    z-index: 1000;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: nowrap;
+    overflow: hidden;
+}
+
+.logo {
+    font-family: var(--font-title);
+    font-size: 1.8em;
+    font-weight: 700;
+    margin-top: 8px;
+    white-space: normal;      /* permite quebrar linha */
+  overflow: hidden;         /* evita estourar o card */
+  display: -webkit-box;     
+  -webkit-line-clamp: 2;    /* mantém no máximo 2 linhas */
+  -webkit-box-orient: vertical;
+  height: auto;             /* libera altura natural */
+  line-height: 1.2;         /* reduz o espaçamento entre linhas */
+    color: var(--primary-color);
+}
+
+.header-icons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-shrink: 0;
+}
+
+.header-icons a {
+    font-size: 1.5em;
+    color: var(--text-color);
+    padding: 5px;
+    transition: color 0.2s;
+}
+
+.header-icons a:hover {
+    color: var(--primary-color);
+}
+
+/* --- ESTILOS DE BOTÃO (NOVOS) --- */
+.btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1em;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+}
+
+/* MUDANÇA: Novo container genérico para as páginas */
+.content-container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* --- LAYOUT PRINCIPAL (Sidebar + Grid) --- */
+#main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    gap: 30px;
+    box-sizing: border-box; 
+    min-height: calc(100vh - 70px);
+}
+
+/* BARRA LATERAL DE FILTROS */
+#sidebar-filters {
+    width: 250px;
+    min-width: 250px;
+    padding: 20px;
+    background-color: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    height: fit-content;
+    box-sizing: border-box;
+}
+
+#sidebar-filters h2 {
+    color: var(--primary-color);
+    margin-top: 0;
+    border-bottom: 2px solid var(--background-color);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.filter-group {
+    margin-bottom: 20px;
+}
+
+.filter-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.filter-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* ÁREA DE PRODUTOS */
+#product-grid-area {
+    flex-grow: 1;
+}
+
+#product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+/* --- CARD DE PRODUTO --- */
+.produto {
+    background-color: var(--card-background);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-align: center;
+    position: relative; 
+}
+
+.produto:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.produto img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.produto h3 {
+    font-family: var(--font-title);
+    color: var(--text-color);
+    font-size: 1.2em;
+    margin: 10px 0 5px 0;
+    min-height: 40px;
+}
+
+.produto .price {
+    font-size: 1.4em;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.produto button, .produto .btn {
+    /* Botão Primário */
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin-top: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    width: 100%;
+    height: 44px; 
+}
+
+.produto button:hover {
+    background-color: #8C14D1; 
+}
+
+/* Botão de Favorito */
+.favorite-btn {
+    position: static;
+    top: 10px; /* MUDANÇA: Ajustado para o canto superior do padding */
+    right: 10px; /* MUDANÇA: Ajustado para o canto superior do padding */
+    width: 36px; 
+    height: 36px;
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    color: var(--text-secondary) !important;
+    border-radius: 50%;
+    padding: 0 !important;
+    line-height: 36px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: color 0.2s, background-color 0.2s;
+    z-index: 50; /* Garante que fique acima da imagem */
+}
+
+.favorite-btn:hover {
+    background-color: var(--card-background) !important;
+    color: var(--primary-color) !important;
+}
+
+.favorite-btn.favorited {
+    color: #E63946 !important; /* Cor de destaque para favoritado */
+}
+
+/* --- ESTILOS DO CARRINHO (cart.html) --- */
+#cart-container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+#cart-items {
+    list-style: none;
+    padding: 0;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+    position: relative;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+.cart-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 15px;
+}
+
+.item-details {
+    flex-grow: 1;
+}
+
+.item-details h4 {
+    margin: 0 0 5px 0;
+    font-size: 1.1em;
+}
+
+.item-quantity {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.item-quantity input {
+    width: 50px;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-left: 5px;
+}
+
+.item-price {
+    font-weight: 700;
+    color: var(--primary-color);
+    width: 100px;
+    text-align: right;
+}
+
+.remove-item-btn {
+    background: none;
+    border: none;
+    color: #E63946;
+    cursor: pointer;
+    font-size: 1.2em;
+    margin-left: 15px;
+    transition: color 0.2s;
+}
+
+.remove-item-btn:hover {
+    color: #B02A37;
+}
+
+#cart-summary {
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    text-align: right;
+}
+
+#cart-summary p {
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+#cart-summary button {
+    /* Botão Primário */
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background-color 0.2s;
+    margin-top: 15px;
+}
+
+#cart-summary button:hover {
+    background-color: #8C14D1;
+}
+
+/* --- ESTILOS DA PÁGINA DE DETALHES (product.html) --- */
+.product-detail-layout {
+    max-width: 1200px;
+    margin: 30px auto;
+    display: flex;
+    gap: 40px;
+    padding: 30px;
+    background-color: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* MUDANÇA: Adiciona estilo ao botão na página de detalhes */
+.product-info button {
+    /* Botão Primário */
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    margin-top: 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background-color 0.2s;
+    width: 100%;
+    max-width: 300px; /* Limita a largura do botão */
+}
+
+.product-info button:hover {
+    background-color: #8C14D1;
+}
+
+.product-gallery {
+    flex: 1;
+    max-width: 50%;
+}
+
+#main-product-image {
+    width: 100%;
+    height: auto;
+    border-radius: var(--border-radius);
+    margin-bottom: 15px;
+}
+
+.thumbnails-details {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+}
+
+.thumbnails-details img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.2s;
+}
+
+.thumbnails-details img:hover, .thumbnails-details img.active-thumb {
+    border-color: var(--primary-color);
+}
+
+.product-info {
+    flex: 1;
+    max-width: 50%;
+}
+
+.product-info h1 {
+    font-family: var(--font-title);
+    font-size: 2.5em;
+    margin-top: 0;
+}
+
+.product-info .price {
+    font-size: 2em;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 10px 0 20px 0;
+}
+
+.product-info .category {
+    color: var(--text-secondary);
+    font-size: 0.9em;
+    margin-bottom: 10px;
+}
+
+.product-info .filter-group {
+    margin-top: 15px;
+}
+
+/* --- ESTILOS DA PÁGINA DE PERFIL (profile.html) --- */
+#profile-container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1.5fr; /* Layout de 3 colunas */
+    gap: 20px;
+}
+
+#profile-info, #orders-history, #favorites-list {
+    padding: 20px;
+    background-color: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+#profile-info h2, #orders-history h2, #favorites-list h2 {
+    font-family: var(--font-title);
+    color: var(--primary-color);
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+#profile-info button {
+    /* Botão Secundário */
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+#profile-info button:hover {
+    background-color: var(--secondary-color); 
+}
+
+/* Estilo para a lista de favoritos no perfil */
+#favorite-product-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Uma coluna no perfil para melhor visualização */
+    gap: 15px;
+}
+
+#favorite-product-grid .produto {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    box-shadow: none;
+    border: 1px solid #eee;
+}
+
+#favorite-product-grid .produto img {
+    width: 60px;
+    height: 60px;
+    margin-right: 10px;
+}
+
+#favorite-product-grid .produto h3 {
+    min-height: auto;
+    margin: 0;
+    font-size: 1em;
+}
+
+#favorite-product-grid .produto .price {
+    font-size: 1em;
+    margin: 0;
+    margin-left: auto;
+}
+
+#favorite-product-grid .produto button, .produto .btn {
+    width: auto;
+    height: auto;
+    padding: 10px 15px;
+    margin-left: auto;
+    font-size: 0.8em;
+}
+
+/* --- Responsividade Geral --- */
+@media (max-width: 992px) {
+    /* Perfil muda para 2 colunas */
+    #profile-container {
+        grid-template-columns: 1fr 1fr;
+    }
+    #profile-info {
+        grid-column: 1 / 3; /* Perfil ocupa a linha toda */
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-top: 70px;
+    }
+
+    /* Layout principal em coluna */
+    #main-container {
+        flex-direction: column;
+        padding: 10px;
+        gap: 15px;
+    }
+
+    #sidebar-filters {
+        width: 100%;
+        min-width: 100%;
+    }
+
+    /* Detalhes do Produto em coluna */
+    .product-detail-layout {
+        flex-direction: column;
+        gap: 20px;
+        padding: 15px;
+    }
+
+    .product-gallery, .product-info {
+        max-width: 100%;
+    }
+
+    .product-info h1 {
+        font-size: 2em;
+    }
+    
+    /* Perfil muda para 1 coluna */
+    #profile-container {
+        grid-template-columns: 1fr;
+        padding: 10px;
+    }
+    #profile-info {
+        grid-column: auto;
+    }
+}
+/* --- POP-UP DE BOAS-VINDAS --- */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 2000;
+    display: none; /* Começa escondido */
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background-color: var(--card-background);
+    padding: 40px;
+    border-radius: var(--border-radius);
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    text-align: left;
+}
+
+.popup-content h2 {
+    margin-top: 0;
+    color: var(--primary-color);
+}
+
+.popup-content h3 {
+    margin-top: 20px;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 5px;
+}
+
+.popup-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 2em;
+    color: #aaa;
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+.popup-close-btn:hover {
+    color: var(--primary-color);
+}
+
+  .disclaimer-container {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .disclaimer-box {
+    background-color: #f9f9f9;
+    border-left: 3px solid #999;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border-radius: 3px;
+  }
+
+  .disclaimer-text {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.5;
+    margin: 10,0;
+  }
+
+/* ==========================================================================
+   Estilos para Login/Cadastro (login.html)
+   ========================================================================== */
+
+.login-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    text-align: center;
+}
+
+.login-container h1 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.login-container label {
+    text-align: left;
+    font-weight: 600;
+    margin-bottom: -10px;
+}
+
+.login-container input[type="email"],
+.login-container input[type="password"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.login-container button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    transition: background-color 0.3s;
+}
+
+.login-container button[type="submit"] {
+    background-color: #5cb85c; /* Verde para Entrar */
+    color: white;
+}
+
+.login-container button[type="submit"]:hover {
+    background-color: #4cae4c;
+}
+
+#register-button {
+    background-color: #007bff; /* Azul para Cadastrar */
+    color: white;
+}
+
+#register-button:hover {
+    background-color: #0056b3;
+}
+
+.login-container .link-voltar {
+    display: block;
+    margin-top: 15px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.login-container .link-voltar:hover {
+    text-decoration: underline;
+}
+
+
+/* Remove o hover do link que simula botão */
+.produto .btn:hover {
+    transform: none;
+    box-shadow: none;
+    background-color: var(--primary-color); /* Mantém a cor de fundo */
+}
+@media (max-width: 480px) {
+    .logo {
+        font-size: 1.4em;
+        max-width: 55vw;
+    }
+}

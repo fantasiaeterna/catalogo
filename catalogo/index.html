@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Catálogo - Fantasia Eterna</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- MUDANÇA: Importação da fonte Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Ícones Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+
+<body>
+<!-- CABEÇALHO FIXO -->
+<header id="main-header">
+    <div class="header-content">
+        <!-- MUDANÇA: Título do site alterado -->
+        <a href="index.html" class="logo">Fantasia Eterna</a>
+        <div class="header-icons">
+            <!-- MUDANÇA: Adição do botão de Dúvida -->
+            <a href="#" id="help-button" title="Como funciona?"><i class="fas fa-question-circle"></i></a>
+            <a href="cart.html" title="Ver Carrinho"><i class="fas fa-shopping-cart"></i></a>
+            <a href="profile.html" title="Minha Conta"><i class="fas fa-user"></i></a>
+        </div>
+    </div>
+</header>
+
+
+    <div id="main-container">
+        <!-- BARRA LATERAL DE FILTROS -->
+        <aside id="sidebar-filters">
+            <h2>Filtros</h2>
+            
+            <div class="filter-group">
+                <label for="category-filter">Filtrar por Categoria:</label>
+                <select id="category-filter" onchange="loadProducts()">
+                    <option value="">Todas as Categorias</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="sort-order">Ordenar por Preço:</label>
+                <select id="sort-order" onchange="loadProducts()">
+                    <option value="">Padrão</option>
+                    <option value="asc">Menor Preço</option>
+                    <option value="desc">Maior Preço</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="color-filter">Filtrar por Cor:</label>
+                <select id="color-filter" onchange="loadProducts()">
+                    <option value="">Todas as Cores</option>
+                </select>
+            </div>
+        </aside>
+
+        <!-- ÁREA DE PRODUTOS -->
+        <main id="product-grid-area">
+            <div id="product-list">
+                <!-- Cards de produtos serão carregados aqui pelo JavaScript -->
+            </div>
+        </main>
+    </div>
+
+    <!-- SCRIPTS -->
+<script type="module">
+    import { auth } from "./js/firebase-config.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { loadProducts, populateCategoryFilter, populateColorFilter, toggleFavorite, handleAddToCart } from "./js/products.js"; 
+    import { addToCart, updateQuantity, removeItem, updateItemColor } from "./js/cart.js"; 
+
+    window.addToCart = addToCart; 
+    window.handleAddToCart = handleAddToCart;
+    window.toggleFavorite = toggleFavorite;
+    window.loadProducts = loadProducts; 
+    window.updateQuantity = updateQuantity;
+    window.removeItem = removeItem;
+    window.updateItemColor = updateItemColor;
+
+
+    onAuthStateChanged(auth, (user ) => {
+        // A lógica de login/logout será tratada em profile.html
+    });
+
+    loadProducts();
+
+</script>
+
+
+
+
+
+    <!-- POP-UP DE BOAS-VINDAS -->
+<div id="welcome-popup" class="popup-overlay">
+    <div class="popup-content">
+        <button id="close-popup-btn" class="popup-close-btn">&times;</button>
+        <section class="como-funciona">
+  <h2>Nosso catálogo</h2>
+  
+  <p>
+    Seja bem-vindo(a)! Explore os detalhes de nossas peças, consulte a disponibilidade, verifique preços e simule sua compra.
+  </p>
+  
+  <p>
+    Atenção, após a simulação encaminharemos você para nosso Instagram para realizar o pedido.
+  </p>
+
+  <h2>Realizando sua Compra</h2>
+  
+  <p>
+    Ao concluir a sua simulação será gerada uma mensagem automática com seus pedidos, selecione a opção “Ir para o Instagram” e seja direcionado para o chat do nosso perfil.
+  </p>
+    </div>
+</div>
+
+<!-- Script para controlar o Pop-up -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const popup = document.getElementById("welcome-popup");
+        const closeBtn = document.getElementById("close-popup-btn");
+        const helpBtn = document.getElementById("help-button");
+
+        // Função para mostrar o pop-up
+        const showPopup = () => { popup.style.display = "flex"; };
+
+        // Função para esconder o pop-up
+        const hidePopup = () => { popup.style.display = "none"; };
+
+        // Verifica se é a primeira visita
+        if (!sessionStorage.getItem("hasVisited")) {
+            showPopup();
+            sessionStorage.setItem("hasVisited", "true");
+        }
+
+        // Eventos para fechar e abrir o pop-up
+        closeBtn.addEventListener("click", hidePopup);
+        helpBtn.addEventListener("click", showPopup);
+        popup.addEventListener("click", function(event) {
+            if (event.target === popup) { // Fecha se clicar fora do conteúdo
+                hidePopup();
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
