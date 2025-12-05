@@ -87,19 +87,40 @@ authForm.addEventListener("submit", (e) => {
             return;
         }
 
-        createUserWithEmailAndPassword(auth, email, password)
+                createUserWithEmailAndPassword(auth, email, password)
             .then(() => {
+                // Exibe mensagem de sucesso
                 message.style.color = "green";
-                message.textContent = "Conta criada com sucesso! Você pode fazer login agora.";
-                // Volta para o modo login após o cadastro
-                isLoginMode = true;
-                toggleButton.click(); // Simula o clique para atualizar o layout
+                message.textContent = "✓ Conta criada com sucesso! Agora você pode fazer login.";
+                
+                // Limpa o formulário
+                authForm.reset();
+                
+                // Aguarda 2 segundos e volta para o modo login
+                setTimeout(() => {
+                    isLoginMode = true;
+                    
+                    // Atualiza o texto dos botões
+                    submitButton.textContent = "Entrar";
+                    toggleButton.textContent = "Cadastrar";
+                    
+                    // Esconde a dica de senha e a confirmação de senha
+                    passwordHint.style.display = "none";
+                    confirmPasswordGroup.style.display = "none";
+                    
+                    // Exibe o link de esqueci a senha
+                    forgotPasswordLink.style.display = "block";
+                    
+                    // Limpa a mensagem
+                    message.textContent = "";
+                }, 2000);
             })
             .catch((err) => {
                 message.style.color = "red";
                 message.textContent = "Erro ao cadastrar: " + err.message;
                 console.error(err);
             });
+
     }
 });
 
@@ -126,3 +147,4 @@ forgotPasswordLink.addEventListener("click", (e) => {
             console.error(err);
         });
 });
+
