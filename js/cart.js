@@ -246,8 +246,14 @@ export function loadCart() {
 export function displayCheckout() {
     const cart = getCart();
     const total = getCartTotal();
-    const halfTotal = total / 2;
-
+    
+// Calcula o subtotal apenas dos itens sob encomenda
+    const encomendaTotal = cart.reduce((sum, item) => {
+        return item.isEncomenda ? sum + (item.price * item.quantity) : sum;
+    }, 0);
+    
+    const halfEncomendaTotal = encomendaTotal / 2;
+    
     const itemsContainer = document.getElementById("checkout-cart-items");
     const detailsDiv = document.getElementById("payment-details");
     
@@ -271,7 +277,7 @@ export function displayCheckout() {
 
     detailsDiv.innerHTML = `
         <p>Valor Total a Pagar: <strong>R$ ${total.toFixed(2)}</strong></p>
-        <p>Valor Mínimo para Encomendas (50%): <strong>R$ ${halfTotal.toFixed(2)}</strong></p>
+        <p>Valor Mínimo para Encomendas (50%): <strong>R$ ${halfEncomendaTotal.toFixed(2)}</strong></p>
     `;
 }
 
@@ -316,4 +322,5 @@ export async function saveOrder() {
         return false;
     }
 }
+
 
