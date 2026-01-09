@@ -107,12 +107,6 @@
         // Função para esconder o pop-up
         const hidePopup = () => { popup.style.display = "none"; };
 
-        // Verifica se é a primeira visita
-        if (!sessionStorage.getItem("hasVisited")) {
-            showPopup();
-            sessionStorage.setItem("hasVisited", "true");
-        }
-
         // Eventos para fechar e abrir o pop-up
         closeBtn.addEventListener("click", hidePopup);
         helpBtn.addEventListener("click", showPopup);
@@ -126,3 +120,4 @@
 
 </body>
 </html>
+
