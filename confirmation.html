@@ -111,9 +111,9 @@
         const hidePopup = () => { popup.style.display = "none"; };
 
         // Verifica se é a primeira visita
-        if (!sessionStorage.getItem("hasVisited")) {
+        if (!localStorage.getItem("hasVisited")) {
             showPopup();
-            sessionStorage.setItem("hasVisited", "true");
+            localStorage.setItem("hasVisited", "true");
         }
 
         // Eventos para fechar e abrir o pop-up
@@ -129,6 +129,7 @@
 
 </body>
 </html>
+
 
 
 
