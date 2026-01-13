@@ -11,14 +11,21 @@ import {
     updateDoc,
     arrayUnion,
     arrayRemove,
-    setDoc
+    setDoc,
+    orderBy,
+    limit,
+    startAfter,
+    documentId // Importa documentId para ordenar pelo ID do documento
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-// Variável global para armazenar os favoritos do usuário logado
+// --- Variáveis Globais para Paginação ---
+let lastVisibleProduct = null;
+const PRODUCTS_PER_PAGE = 8;
+let isLoading = false;
+
 let userFavorites = [];
 
-// Função auxiliar para buscar os favoritos do usuário
 async function fetchUserFavorites( ) {
     const user = auth.currentUser;
     if (!user) {
@@ -33,16 +40,6 @@ async function fetchUserFavorites( ) {
         console.error("Erro ao buscar favoritos:", error);
         userFavorites = [];
     }
-}
-
-// Função para embaralhar array (Fisher-Yates)
-function shuffleArray(array) {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
 }
 
 // Função para popular o filtro de categorias (sem duplicatas)
@@ -115,22 +112,35 @@ export async function populateColorFilter() {
     }
 }
 
-// Função para carregar produtos com filtros e ordenação ALEATÓRIA
-export async function loadProducts() {
+// --- Função para carregar produtos com ordenação por MAIS RECENTES ---
+export async function loadProducts(loadMore = false) {
+    if (isLoading) return;
+    isLoading = true;
+
     const container = document.getElementById("product-list");
-    if (!container) return;
+    const loadMoreContainer = document.getElementById("load-more-container");
+    if (!container || !loadMoreContainer) {
+        isLoading = false;
+        return;
+    }
 
     const categoryFilter = document.getElementById("category-filter");
     const sortOrder = document.getElementById("sort-order");
-    const colorFilter = document.getElementById("color-filter"); 
+    const colorFilter = document.getElementById("color-filter");
 
-    container.innerHTML = "Carregando produtos...";
+    if (!loadMore) {
+        container.innerHTML = "Carregando produtos...";
+        lastVisibleProduct = null;
+    }
     
+    loadMoreContainer.innerHTML = '';
+
     await fetchUserFavorites(); 
 
     const selectedCategory = categoryFilter ? categoryFilter.value : "";
-    const order = sortOrder ? sortOrder.value : "asc";
-    const selectedColor = colorFilter ? colorFilter.value : ""; 
+    // O valor padrão do seletor de ordenação deve ser 'recentes'
+    const order = sortOrder ? sortOrder.value : "recentes"; 
+    const selectedColor = colorFilter ? colorFilter.value : "";
 
     try {
         let q = collection(db, "produtos");
@@ -139,11 +149,32 @@ export async function loadProducts() {
             q = query(q, where("categoria", "==", selectedCategory));
         }
         
+        // --- LÓGICA DE ORDENAÇÃO ATUALIZADA ---
+        if (order === "asc") {
+            q = query(q, orderBy("preco", "asc"));
+        } else if (order === "desc") {
+            q = query(q, orderBy("preco", "desc"));
+        } else { // "recentes" (padrão)
+            // Ordena pelos IDs dos documentos em ordem decrescente (mais novos primeiro)
+            q = query(q, orderBy(documentId(), "desc")); 
+        }
+
+        if (loadMore && lastVisibleProduct) {
+            q = query(q, startAfter(lastVisibleProduct), limit(PRODUCTS_PER_PAGE));
+        } else {
+            q = query(q, limit(PRODUCTS_PER_PAGE));
+        }
+        
         const snapshot = await getDocs(q);
 
-        if (snapshot.empty) {
+        if (snapshot.empty && !loadMore) {
             container.innerHTML = "Nenhum produto encontrado.";
+            isLoading = false;
             return;
+        }
+
+        if (!snapshot.empty) {
+            lastVisibleProduct = snapshot.docs[snapshot.docs.length - 1];
         }
 
         let products = [];
@@ -151,61 +182,62 @@ export async function loadProducts() {
             products.push({ id: doc.id, ...doc.data() });
         });
 
-        // FILTRAGEM POR COR
         if (selectedColor) {
             products = products.filter(p => 
                 p.cores && p.cores.includes(selectedColor)
             );
         }
         
-        if (products.length === 0) {
+        if (products.length === 0 && !loadMore) {
             container.innerHTML = "Nenhum produto encontrado com os filtros selecionados.";
+            isLoading = false;
             return;
-        }
-
-        // ORDENAÇÃO: Embaralha aleatoriamente por padrão, ordena por preço se selecionado
-        if (order === "asc") {
-            products.sort((a, b) => a.preco - b.preco);
-        } else if (order === "desc") {
-            products.sort((a, b) => b.preco - a.preco);
-        } else {
-            // Embaralha aleatoriamente
-            products = shuffleArray(products);
         }
 
         let html = "";
         products.forEach(p => {
             const imageUrl = p.imagens && p.imagens.length > 0 ? p.imagens[0] : 'placeholder.png'; 
-            
             const isFavorited = userFavorites.includes(p.id);
             const favoriteClass = isFavorited ? 'favorited' : '';
- 	            const favoriteIcon = isFavorited ? 'fas fa-heart' : 'far fa-heart';
-	            
-	            const hasColors = p.cores && p.cores.length > 0;
-		            const buttonHtml = hasColors 
-		                ? `<a href="product.html?id=${p.id}" class="btn btn-primary" style="width: 100%; display: block; box-sizing: border-box;">Ver Detalhes</a>`
-			                : `<button onclick="handleAddToCart('${p.id}', '${p.nome}', ${parseFloat(p.preco || 0)}, ${p.tipo === 'Sob encomenda'}, false)">Adicionar ao Carrinho</button>`;
-		            
-		            html += `
-		                <div class="produto">
-		                    <a href="product.html?id=${p.id}">
-		                        <img src="${imageUrl}" alt="${p.nome}">
-		                    </a>
-		                    <a href="product.html?id=${p.id}">
-		                        <h3>${p.nome}</h3>
-		                    </a>
-		                    <p class="price">R$ ${parseFloat(p.preco || 0).toFixed(2)}</p>
-	                    ${buttonHtml}
-	                    <button onclick="toggleFavorite('${p.id}')" class="favorite-btn ${favoriteClass}"><i class="${favoriteIcon}"></i></button>
-	                </div>
-	            `;
-	        });
+            const favoriteIcon = isFavorited ? 'fas fa-heart' : 'far fa-heart';
+            const hasColors = p.cores && p.cores.length > 0;
+            const buttonHtml = hasColors 
+                ? `<a href="product.html?id=${p.id}" class="btn btn-primary" style="width: 100%; display: block; box-sizing: border-box;">Ver Detalhes</a>`
+                : `<button onclick="handleAddToCart('${p.id}', '${p.nome}', ${parseFloat(p.preco || 0)}, ${p.tipo === 'Sob encomenda'}, false)">Adicionar ao Carrinho</button>`;
+            
+            html += `
+                <div class="produto">
+                    <a href="product.html?id=${p.id}">
+                        <img src="${imageUrl}" alt="${p.nome}">
+                    </a>
+                    <a href="product.html?id=${p.id}">
+                        <h3>${p.nome}</h3>
+                    </a>
+                    <p class="price">R$ ${parseFloat(p.preco || 0).toFixed(2)}</p>
+                    ${buttonHtml}
+                    <button onclick="toggleFavorite('${p.id}')" class="favorite-btn ${favoriteClass}"><i class="${favoriteIcon}"></i></button>
+                </div>
+            `;
+        });
 
-        container.innerHTML = html;
+        if (loadMore) {
+            container.innerHTML += html;
+        } else {
+            container.innerHTML = html;
+        }
+
+        if (snapshot.docs.length === PRODUCTS_PER_PAGE) {
+            loadMoreContainer.innerHTML = `<button id="load-more-btn" class="btn btn-secondary">Carregar Mais</button>`;
+            document.getElementById("load-more-btn").addEventListener('click', () => loadProducts(true));
+        }
 
     } catch (err) {
         console.error(err);
-        container.innerHTML = "Erro ao carregar produtos.";
+        if (!loadMore) {
+            container.innerHTML = "Erro ao carregar produtos.";
+        }
+    } finally {
+        isLoading = false;
     }
 }
 
