@@ -11,7 +11,11 @@ import {
     updateDoc,
     arrayUnion,
     arrayRemove,
-    setDoc
+    setDoc,
+    orderBy,      // <-- Adicionada
+    limit,        // <-- Adicionada
+    startAfter,   // <-- Adicionada
+    documentId    // <-- Adicionada
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
@@ -399,4 +403,5 @@ onAuthStateChanged(auth, (user) => {
         populateColorFilter();
     }
 });
+
 
