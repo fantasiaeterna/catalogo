@@ -403,4 +403,3 @@ onAuthStateChanged(auth, (user) => {
         populateColorFilter();
     }
 });
-
