@@ -114,7 +114,8 @@ export async function populateColorFilter() {
     }
 }
 
-// --- Função para carregar produtos com filtros, ordenação e paginação ---
+// Substitua sua função loadProducts por esta versão corrigida
+
 export async function loadProducts(loadMore = false) {
     if (isLoading) return;
     isLoading = true;
@@ -132,24 +133,31 @@ export async function loadProducts(loadMore = false) {
 
     if (!loadMore) {
         container.innerHTML = "Carregando produtos...";
-        lastVisibleProduct = null; // Reseta a paginação ao aplicar novos filtros
+        lastVisibleProduct = null;
     }
     
-    loadMoreContainer.innerHTML = ''; // Limpa o botão "Carregar Mais"
+    loadMoreContainer.innerHTML = '';
 
     await fetchUserFavorites();
 
     const selectedCategory = categoryFilter ? categoryFilter.value : "";
-    const order = sortOrder ? sortOrder.value : "recentes"; // Padrão é 'recentes'
+    const order = sortOrder ? sortOrder.value : "recentes";
     const selectedColor = colorFilter ? colorFilter.value : "";
 
     try {
         let q = collection(db, "produtos");
-        
+
+        // --- MONTANDO A CONSULTA PASSO A PASSO ---
+
+        // 1. Aplica filtros (se existirem)
         if (selectedCategory) {
             q = query(q, where("categoria", "==", selectedCategory));
         }
-        
+        if (selectedColor) {
+            q = query(q, where("cores", "array-contains", selectedColor));
+        }
+
+        // 2. Aplica ordenação
         if (order === "asc") {
             q = query(q, orderBy("preco", "asc"));
         } else if (order === "desc") {
@@ -158,16 +166,18 @@ export async function loadProducts(loadMore = false) {
             q = query(q, orderBy(documentId(), "desc"));
         }
 
+        // 3. Aplica paginação (SEMPRE no final)
         if (loadMore && lastVisibleProduct) {
             q = query(q, startAfter(lastVisibleProduct), limit(PRODUCTS_PER_PAGE));
         } else {
             q = query(q, limit(PRODUCTS_PER_PAGE));
         }
         
+        // --- EXECUÇÃO E RENDERIZAÇÃO (sem alterações aqui) ---
         const snapshot = await getDocs(q);
 
         if (snapshot.empty && !loadMore) {
-            container.innerHTML = "Nenhum produto encontrado.";
+            container.innerHTML = "Nenhum produto encontrado com os filtros selecionados.";
             isLoading = false;
             return;
         }
@@ -180,13 +190,9 @@ export async function loadProducts(loadMore = false) {
         snapshot.forEach(doc => {
             products.push({ id: doc.id, ...doc.data() });
         });
-
-        if (selectedColor) {
-            products = products.filter(p => 
-                p.cores && p.cores.includes(selectedColor)
-            );
-        }
         
+        // O filtro de cor no cliente foi removido, o que está correto.
+
         if (products.length === 0 && !loadMore) {
             container.innerHTML = "Nenhum produto encontrado com os filtros selecionados.";
             isLoading = false;
@@ -232,13 +238,12 @@ export async function loadProducts(loadMore = false) {
 
     } catch (err) {
         console.error("Erro detalhado ao carregar produtos:", err);
-        if (!loadMore) {
-            container.innerHTML = "Erro ao carregar produtos. Verifique o console para mais detalhes.";
-        }
+        container.innerHTML = "Erro ao carregar produtos. Verifique o console para mais detalhes.";
     } finally {
         isLoading = false;
     }
 }
+
 
 
 // Função para lidar com adição ao carrinho (verifica se tem cores)
@@ -403,5 +408,6 @@ onAuthStateChanged(auth, (user) => {
         populateColorFilter();
     }
 });
+
 
 
