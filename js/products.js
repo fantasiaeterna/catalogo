@@ -374,6 +374,7 @@ export async function loadProductDetails(productId) {
 	                <div class="product-info">
 	                    <h1>${p.nome}</h1>
 	                    <p class="category">Categoria: ${p.categoria}</p>
+						<p class="product-type">${p.tipo}</p>
 	                    <p class="price">R$ ${parseFloat(p.preco || 0).toFixed(2)}</p>
 	                    <p>${p.descricao}</p>
 	                    
@@ -408,6 +409,7 @@ onAuthStateChanged(auth, (user) => {
         populateColorFilter();
     }
 });
+
 
 
 
