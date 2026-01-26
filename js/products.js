@@ -115,7 +115,6 @@ export async function populateColorFilter() {
 }
 
 // Substitua sua função loadProducts por esta versão corrigida
-
 export async function loadProducts(loadMore = false) {
     if (isLoading) return;
     isLoading = true;
@@ -147,9 +146,9 @@ export async function loadProducts(loadMore = false) {
     try {
         let q = collection(db, "produtos");
 
-        // --- MONTANDO A CONSULTA PASSO A PASSO ---
+        // --- MONTANDO A CONSULTA CORRETAMENTE ---
 
-        // 1. Aplica filtros (se existirem)
+        // 1. Aplica filtros de campo (se existirem)
         if (selectedCategory) {
             q = query(q, where("categoria", "==", selectedCategory));
         }
@@ -157,7 +156,7 @@ export async function loadProducts(loadMore = false) {
             q = query(q, where("cores", "array-contains", selectedColor));
         }
 
-        // 2. Aplica ordenação
+        // 2. Aplica a ordenação (SEMPRE feita pelo Firestore)
         if (order === "asc") {
             q = query(q, orderBy("preco", "asc"));
         } else if (order === "desc") {
@@ -166,14 +165,14 @@ export async function loadProducts(loadMore = false) {
             q = query(q, orderBy(documentId(), "desc"));
         }
 
-        // 3. Aplica paginação (SEMPRE no final)
+        // 3. Aplica a paginação (SEMPRE no final da montagem da consulta)
         if (loadMore && lastVisibleProduct) {
             q = query(q, startAfter(lastVisibleProduct), limit(PRODUCTS_PER_PAGE));
         } else {
             q = query(q, limit(PRODUCTS_PER_PAGE));
         }
         
-        // --- EXECUÇÃO E RENDERIZAÇÃO (sem alterações aqui) ---
+        // --- EXECUÇÃO E RENDERIZAÇÃO ---
         const snapshot = await getDocs(q);
 
         if (snapshot.empty && !loadMore) {
@@ -190,14 +189,6 @@ export async function loadProducts(loadMore = false) {
         snapshot.forEach(doc => {
             products.push({ id: doc.id, ...doc.data() });
         });
-        
-        // O filtro de cor no cliente foi removido, o que está correto.
-
-        if (products.length === 0 && !loadMore) {
-            container.innerHTML = "Nenhum produto encontrado com os filtros selecionados.";
-            isLoading = false;
-            return;
-        }
 
         let html = "";
         products.forEach(p => {
@@ -239,12 +230,11 @@ export async function loadProducts(loadMore = false) {
     } catch (err) {
         console.error("Erro detalhado ao carregar produtos:", err);
         container.innerHTML = "Erro ao carregar produtos. Verifique o console para mais detalhes.";
+        // Se precisar de um novo índice, o erro aparecerá aqui no console.
     } finally {
         isLoading = false;
     }
 }
-
-
 
 // Função para lidar com adição ao carrinho (verifica se tem cores)
 // A função handleAddToCart não é mais necessária, pois a lógica foi movida para loadProducts.
