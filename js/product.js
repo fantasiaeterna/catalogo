@@ -21,6 +21,7 @@ db.collection("produtos").doc(productId).get().then(doc => {
     document.getElementById("product-title").textContent = produto.nome;
     document.getElementById("product-price").textContent = "R$ " + produto.preco;
     document.getElementById("product-description").textContent = produto.descricao;
+    document.getElementById("product-type").textContent = produto.tipo;
 
     // imagens
     const img = document.getElementById("product-image");
