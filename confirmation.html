@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Pedido em andamento - Fantasia Eterna</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+<header id="main-header">
+    <div class="header-content">
+        <a href="index.html" class="logo">Fantasia Eterna</a>
+        <div class="header-icons">
+            <a href="#" id="help-button" title="Como funciona?"><i class="fas fa-question-circle"></i></a>
+            <a href="cart.html" title="Ver Carrinho"><i class="fas fa-shopping-cart"></i></a>
+        </div>
+    </div>
+</header>
+
+<div id="confirmation-container" class="content-container">
+    <h1>Pedido em andamento</h1>
+    <div id="confirmation-message"></div>
+    <button id="copy-button" class="btn btn-primary">Copiar Mensagem</button>
+    <a href="https://www.instagram.com/_fantasiaeterna/" target="_blank" class="btn btn-secondary">Ir para o Instagram</a>
+</div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get('orderId');
+    const orderNumber = orderId ? orderId.substring(0, 5).toUpperCase() : 'XXXXX';
+
+    document.getElementById('confirmation-message').innerHTML = `
+        <h4><strong>Copie a mensagem abaixo, edite-a com o seu endereço no local indicado. Envie no nosso Chat do Instagram pelo atalho abaixo. Depois disso, é só esperar o nosso contato!</strong></h4>
+        <p><strong>Fique atento!</strong> Tenha certeza de ter lido e entendido nossos detalhes de venda. Clicando no botão abaixo, você confirma estar ciente de todo nosso processo e está de acordo 💖 </p>
+        <hr>
+        <p><strong>Mensagem para Envio:</strong></p>
+        <textarea id="message-to-copy" rows="5" readonly>Oi! Meu pedido é o ${orderNumber}. O endereço de envio é [Insira aqui o seu endereço] Gostaria de combinar os detalhes da entrega!</textarea>
+    `;
+
+    document.getElementById('copy-button').addEventListener('click', () => {
+        const textarea = document.getElementById('message-to-copy');
+        textarea.select();
+        document.execCommand('copy');
+        alert('Mensagem copiada para a área de transferência!');
+    });
+</script>
+
+<!-- POP-UP DE BOAS-VINDAS -->
+<div id="welcome-popup" class="popup-overlay">
+    <div class="popup-content">
+        <button id="close-popup-btn" class="popup-close-btn">&times;</button>
+        <section class="como-funciona">
+  <h2>Nosso catálogo</h2>
+  
+  <p>
+    Seja bem-vindo(a)! Explore os detalhes de nossas peças, consulte a disponibilidade, verifique preços e simule sua compra.
+  </p>
+  
+  <p>
+    Atenção, após a simulação encaminharemos você para nosso Instagram para realizar o pedido.
+  </p>
+
+  <h2>Realizando sua Compra</h2>
+  
+  <p>
+    Ao concluir a sua simulação será gerada uma mensagem automática com seus pedidos, selecione a opção "Ir para o Instagram" e seja direcionado para o chat do nosso perfil.
+  </p>
+        </section>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const popup = document.getElementById("welcome-popup");
+        const closeBtn = document.getElementById("close-popup-btn");
+        const helpBtn = document.getElementById("help-button");
+
+        const showPopup = () => { popup.style.display = "flex"; };
+        const hidePopup = () => { popup.style.display = "none"; };
+
+        if (!localStorage.getItem("hasVisited")) {
+            showPopup();
+            localStorage.setItem("hasVisited", "true");
+        }
+
+        closeBtn.addEventListener("click", hidePopup);
+        helpBtn.addEventListener("click", showPopup);
+        popup.addEventListener("click", function(e) { if (e.target === popup) hidePopup(); });
+    });
+</script>
+
+</body>
+</html>
